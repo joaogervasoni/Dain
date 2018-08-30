@@ -102,7 +102,10 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Dain-Logo-Pub.png" />
     <Content Include="Content\Dain-Logo.png" />
+    <Content Include="Content\Dashboard.css" />
     <Content Include="Content\Login.css" />
+    <Content Include="Content\Person.jpg" />
+    <Content Include="Content\Pub.jpg" />
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Login.js" />
@@ -129,10 +132,13 @@
     <Content Include="Content\bootstrap.min.css.map" />
     <None Include="packages.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_Layout-Dashboard-Pub.cshtml" />
     <Content Include="Views\Pub\Login.cshtml" />
     <Content Include="Views\Person\Login.cshtml" />
     <Content Include="Views\Shared\_Layout-Login.cshtml" />
+    <Content Include="Views\Pub\Dashboard.cshtml" />
+    <Content Include="Views\Person\Dashboard.cshtml" />
+    <Content Include="Views\Shared\_Layout-Dashboard-Person.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

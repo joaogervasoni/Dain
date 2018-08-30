@@ -13,5 +13,10 @@ namespace Dain.Controllers
         {
             return View();
         }
+
+        public ActionResult Dashboard()
+        {
+            return View();
+        }
     }
 }
