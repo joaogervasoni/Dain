@@ -119,7 +119,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Context.cs" />
+    <Compile Include="Models\Base\Context.cs" />
+    <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\Pub.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
