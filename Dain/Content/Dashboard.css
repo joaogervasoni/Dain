@@ -1,3 +1,23 @@
+
+
+.ul {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.line {
+    border-bottom: 1px solid rgba(9,45,66,.13);
+    padding: 8px 0;
+    position: relative;
+    margin: 0 0 4px 40px;
+}
+
+.line-np {
+    position: relative;
+    margin: 0 0 4px 40px;
+}
+
+/*others*/
 body {
   font-size: .875rem;
 }

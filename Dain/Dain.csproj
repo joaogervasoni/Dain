@@ -108,6 +108,7 @@
     <Content Include="Content\Pub.jpg" />
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Dashboard.js" />
     <Content Include="Scripts\Login.js" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -142,6 +143,8 @@
     <Content Include="Views\Pub\Dashboard.cshtml" />
     <Content Include="Views\Person\Dashboard.cshtml" />
     <Content Include="Views\Shared\_Layout-Dashboard-Person.cshtml" />
+    <Content Include="Views\Pub\Account.cshtml" />
+    <Content Include="Views\Person\Account.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
