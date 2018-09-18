@@ -116,6 +116,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\PersonController.cs" />
     <Compile Include="Controllers\PubController.cs" />
+    <Compile Include="DAL\BaseDAO.cs" />
+    <Compile Include="DAL\PersonDAO.cs" />
+    <Compile Include="DAL\PubDAO.cs" />
     <Compile Include="DAL\SingletonContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
