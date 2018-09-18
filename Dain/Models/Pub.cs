@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Dain.Models
 {
@@ -10,26 +11,36 @@ namespace Dain.Models
         /// <summary>
         /// The name of the <see cref="Pub"/>
         /// </summary>
+        [Required]
+        [Display(Name = "Name")]
         public string Name { get; set; }
 
         /// <summary>
         /// The address that the <see cref="Pub"/> is located
         /// </summary>
+        [Required]
+        [Display(Name = "Address")]
         public string Address { get; set; }
 
         /// <summary>
         /// The city where the <see cref="Pub"/> is located
         /// </summary>
+        [Required]
+        [Display(Name = "City")]
         public string City { get; set; }
 
         /// <summary>
         /// The state that the <see cref="Pub"/> is located
         /// </summary>
+        [Display(Name = "State")]
         public string State { get; set; }
 
         /// <summary>
         /// The date of foundation of the <see cref="Pub"/>
         /// </summary>
+        [Required]
+        [Display(Name = "Foundation Date")]
+        [DataType(DataType.DateTime)]
         public DateTime FoundationDate { get; set; }
 
         /// <summary>
