@@ -41,6 +41,7 @@ namespace Dain.Models
         [Required]
         [Display(Name = "Foundation Date")]
         [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime FoundationDate { get; set; }
 
         /// <summary>

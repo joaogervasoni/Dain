@@ -26,12 +26,14 @@ namespace Dain.DAL
         {
             try
             {
-                db.Set<T>().Attach(entidade);
-                db.Entry<T>(entidade).State = EntityState.Modified;
+                var local = db.Set<T>().Local.FirstOrDefault(f => f.Id == entidade.Id);
+                db.Entry(local).State = EntityState.Detached;
+                db.Entry(entidade).State = EntityState.Modified;
                 db.SaveChanges();
                 return true;
             }
-            catch { return false; }
+            catch
+            { return false; }
         }
 
         public static void Delete(T entidade)

@@ -1,55 +1,60 @@
-﻿
+﻿@model Dain.Models.Pub
+
 @{
     Layout = "~/Views/Shared/_Layout-Login.cshtml";
     ViewBag.Title = "Login - Pub";
 }
 
-<form class="form-signin" id="loginForm" name="loginForm" style="display:initial;">
+@using (Html.BeginForm("Login", "Pub", FormMethod.Post, new { @class = "form-signin", style = "display:initial;", id = "loginForm" }))
+{
+
     <img class="mb-4" src="~/Content/Dain-Logo-Pub.png" alt="" width="150" height="185">
-    <h1 class="h3 mb-3 font-weight-normal">Login - Person</h1>
+    <h1 class="h3 mb-3 font-weight-normal">Login - Pub</h1>
+    @Html.ValidationSummary(true, null, new { @class = "text-danger" })
+
     <label for="inputEmail" class="sr-only">Email</label>
-    <input type="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+
+    @Html.TextBox("EmailLogin", null, new { @class = "form-control", @placeholder = "Email", id = "EmailLogin", required = "true", type = "email" })
+
+    @Html.Password("PasswordLogin", null, new { @class = "form-control", @placeholder = "Password", id = "PasswordLogin", required = "true" })
+
     <br />
     <input type="button" class="btn btn-outline-dark" id="Register" name="Register" value="Register" onclick="RegisterJS();">
     <button class="btn btn-outline-dark" type="submit">Login</button>
     <p class="mt-5 mb-3 text-muted">&copy; 2018 - Dain</p>
-</form>
+}
 
-<form class="form-signin" id="registerForm" name="registerForm" style="display:none;">
+@using (Html.BeginForm("Register", "Pub", FormMethod.Post, new { @class = "form-signin", style = "display:none;", id = "registerForm" }))
+{
     <h1 class="h3 mb-3 font-weight-normal">Cadastro - Pub</h1>
 
-    <label for="registerEmail" class="sr-only">Email</label>
-    <input type="email" id="registerEmail" class="form-control" placeholder="Email" required autofocus style="">
+    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", required = "true", placeholder="Email", type="email"} })
 
-    <label for="registerLogin" class="sr-only">Login</label>
-    <input type="text" id="registerLogin" class="form-control" placeholder="Login" required autofocus style="  margin-bottom: -1px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+    @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "form-control", required = "true", placeholder = "Login",
+        style = "margin-bottom: -1px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;" } })
 
-    <label for="registerPassword" class="sr-only">Password</label>
-    <input type="password" id="registerPassword" class="form-control" placeholder="Password" required autofocus style="">
+    @Html.PasswordFor(model => model.Password, new { @class = "form-control text-box single-line", required = "true", placeholder = "Password" })
 
-    <label for="registerName">Name</label>
-    <input type="text" id="registerName" class="form-control" placeholder="Name" required autofocus style="">
+    @Html.LabelFor(model => model.Name, new { htmlAttributes = new { @class = "sr-only" } })
+    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", required = "true", placeholder = "Name" } })
 
-    <label for="registerAddress">Address</label>
-    <input type="text" id="registerAddress" class="form-control" placeholder="Address" required autofocus style="">
+    @Html.LabelFor(model => model.Address, new { htmlAttributes = new { @class = "sr-only" } })
+    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", required = "true", placeholder = "Address" } })
 
-    <label for="registerFoundation">Foundation</label>
-    <input type="date" id="registerFoundation" placeholder="Foundation" class="form-control" required />
+    @Html.LabelFor(model => model.FoundationDate, new { htmlAttributes = new { @class = "sr-only" } })
+    @Html.EditorFor(model => model.FoundationDate, new { htmlAttributes = new { @class = "form-control", type = "date", required = "true", placeholder = "FoudationDate" } })
 
-    <label for="registerState">State</label>
+    <label for="State">State</label>
     <select class="form-control">
         <option>Paraná</option>
     </select>
 
-    <label for="registerCity">City</label>
-    <input type="text" id="registerCity" class="form-control" placeholder="City" required autofocus style="">
+    @Html.LabelFor(model => model.City, new { htmlAttributes = new { @class = "sr-only" } })
+    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", required = "true", placeholder = "City" } })
 
     <br />
-
     <button class="btn btn-outline-dark" type="submit">Registrar</button>
     <input type="button" class="btn btn-outline-dark" id="Voltar" name="Voltar" value="Voltar" onclick="LoginJS();">
 
     <p class="mt-5 mb-3 text-muted">&copy; 2018 - Dain</p>
-</form>
+}
