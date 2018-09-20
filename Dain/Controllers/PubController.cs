@@ -9,6 +9,7 @@ using Dain.Utils;
 using System.Net;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace Dain.Controllers
 {
@@ -32,18 +33,29 @@ namespace Dain.Controllers
             return View("Login");
         }
 
-        public ActionResult Register(Pub pub)
+        [HttpPost]
+        public ActionResult Register(Pub pub, HttpPostedFileBase upImage)
         {
             pub.Rating = 0;
             pub.RegistrationDate = DateTime.Now;
-            pub.UriGalery = "No";
             pub.State = "Paraná";
             pub.UserType = "Default";
             pub = Geo(pub);
+            pub.Email.ToLower();
 
             if (ModelState.IsValid == true)
             {
-                pub.Email.ToLower();
+                if (upImage != null)
+                {
+                    Directory.CreateDirectory(Server.MapPath("~/Images/Pub/" + pub.Name));
+                    string name = Path.GetFileName(upImage.FileName);
+                    string path = Path.Combine(Server.MapPath("~/Images/Pub/" + pub.Name), ("Profile_Image" + Path.GetExtension(upImage.FileName)));
+
+                    upImage.SaveAs(path);
+                    pub.UriGalery = "/Images/Pub/" + pub.Name;
+                }
+                else { pub.UriGalery = "No"; }
+
                 if (PubDAO.Insert(pub) == true)
                 {
                     Sess.ReturnPubId(pub.Id);
@@ -117,10 +129,38 @@ namespace Dain.Controllers
             else { return View("Account"); }
         }
 
+        [HttpPost]
+        public ActionResult UpdateImg(HttpPostedFileBase upImage)
+        {
+            var pub = PubDAO.Search(Sess.ReturnPubId(null));
+            if (upImage != null)
+            {
+                if(!Directory.Exists(Server.MapPath("~/Images/Pub/" + pub.Name)))
+                {
+                    Directory.CreateDirectory(Server.MapPath("~/Images/Pub/" + pub.Name));
+                }
+
+                string name = Path.GetFileName(upImage.FileName);
+                string path = Path.Combine(Server.MapPath("~/Images/Pub/" + pub.Name), "Profile_Image.jpg");
+
+                upImage.SaveAs(path);
+                return RedirectToAction("Account", "Pub");
+
+            } else { return View("Account"); }
+
+        }
+
         public void ViewBags()
         {
             var pub = PubDAO.Search(Sess.ReturnPubId(null));
             if (pub == null){ ViewBag.Name = "Null"; } else { ViewBag.Name = pub.Name; };
+
+            if (pub.UriGalery != "No")
+            {
+                ViewBag.Image = pub.UriGalery + "/Profile_Image.jpg";
+            }
+            else { ViewBag.Image ="~/Content/Preview.png"; }
+            
         }
     }
 }
