@@ -24,11 +24,11 @@
     <p class="mt-5 mb-3 text-muted">&copy; 2018 - Dain</p>
 }
 
-@using (Html.BeginForm("Register", "Pub", FormMethod.Post, new { @class = "form-signin", style = "display:none;", id = "registerForm" }))
+@using (Html.BeginForm("Register", "Pub", FormMethod.Post, new { @class = "form-signin", style = "display:none;", id = "registerForm", enctype = "multipart/form-data" }))
 {
     <h1 class="h3 mb-3 font-weight-normal">Cadastro - Pub</h1>
 
-    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", required = "true", placeholder="Email", type="email"} })
+    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", required = "true", placeholder = "Email", type = "email" } })
 
     @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "form-control", required = "true", placeholder = "Login",
         style = "margin-bottom: -1px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;" } })
@@ -51,10 +51,17 @@
 
     @Html.LabelFor(model => model.City, new { htmlAttributes = new { @class = "sr-only" } })
     @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", required = "true", placeholder = "City" } })
-
     <br />
-    <button class="btn btn-outline-dark" type="submit">Registrar</button>
-    <input type="button" class="btn btn-outline-dark" id="Voltar" name="Voltar" value="Voltar" onclick="LoginJS();">
+
+    <div id="wrapper">
+        <input type="file" accept="image/*" onchange="Preview_image(event)" class="form-control" name="upImage" id="upImage">
+        <br />
+        <img src="~/Content/Preview.png" id="output_image" class="rounded mx-auto d-block">
+    </div>
+    <br />
+
+    <button class="btn btn-outline-dark" type="submit">Register</button>
+    <input type="button" class="btn btn-outline-dark" id="Return" name="Return" value="Return" onclick="LoginJS();">
 
     <p class="mt-5 mb-3 text-muted">&copy; 2018 - Dain</p>
 }

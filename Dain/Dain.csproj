@@ -108,6 +108,7 @@
     <Content Include="Content\Dashboard.css" />
     <Content Include="Content\Login.css" />
     <Content Include="Content\Person.jpg" />
+    <Content Include="Content\Preview.png" />
     <Content Include="Content\Pub.jpg" />
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />

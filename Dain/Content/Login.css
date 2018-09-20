@@ -42,3 +42,8 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+#output_image {
+    height: 150px;
+    width: auto;
+}

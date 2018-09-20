@@ -17,7 +17,7 @@
     <p class="mt-5 mb-3 text-muted">&copy; 2018 - Dain</p>
 </form>
 
-<form class="form-signin" id="registerForm" name="registerForm" style="display:none;">
+<form class="form-signin" id="registerForm" name="registerForm" style="display:none;" enctype="multipart/form-data">
     <h1 class="h3 mb-3 font-weight-normal">Cadastro - Person</h1>
 
     <label for="registerEmail" class="sr-only">Email</label>
@@ -51,8 +51,15 @@
     </select>
     <br />
 
-    <button class="btn btn-outline-dark" type="submit">Registrar</button>
-    <input type="button" class="btn btn-outline-dark" id="Voltar" name="Voltar" value="Voltar" onclick="LoginJS();">
+    <div id="wrapper">
+        <input type="file" accept="image/*" onchange="Preview_image(event)" class="form-control" name="upImage" id="upImage">
+        <br />
+        <img src="~/Content/Preview.png" id="output_image" class="rounded mx-auto d-block">
+    </div>
+    <br />
+
+    <button class="btn btn-outline-dark" type="submit">Register</button>
+    <input type="button" class="btn btn-outline-dark" id="Return" name="Return" value="Return" onclick="LoginJS();">
 
     <p class="mt-5 mb-3 text-muted">&copy; 2018 - Dain</p>
 </form>

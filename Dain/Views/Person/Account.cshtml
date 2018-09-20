@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "Dashboard - Account";
     ViewBag.Name = "João";
-    ViewBag.Imagem = "/Content/Person.jpg";
+    ViewBag.Image = "/Content/Preview.png";
     Layout = "~/Views/Shared/_Layout-Dashboard-Person.cshtml";
 }
 
@@ -76,6 +76,28 @@
     @*<p class="ul">Layout Color</p>*@
 </div>
 
+<br />
+<div class="line">
+    <h5 style="color:dodgerblue;">Image</h5>
+</div>
+<div class="line-np">
+    <div class="form-signin" id="imgForm" style="display:initial;">
+        <div class="card text-center col-md-4">
+            <div class="card-body">
+                @using (Html.BeginForm("UpdateImg", "Person", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <img src="@ViewBag.Image" id="output_image" class="rounded mx-auto d-block img-fluid" style="max-height: 180px; width: auto;" />
+                    <br />
+
+                    <input type="file" accept="image/*" onchange="Preview_image(event)" class="form-control" name="upImage" id="upImage">
+                    <br />
+                    <button class="btn btn-outline-dark" type="submit">Change</button>
+                }
+            </div>
+        </div>
+        <br />
+    </div>
+</div>
 
 <br />
 <div class="line">
