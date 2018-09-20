@@ -259,3 +259,6 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/Dain/Migrations/201809201704218_FirstMigration.resx
+/Dain/Migrations/201809201704218_FirstMigration.Designer.cs
+/Dain/Migrations/201809201704218_FirstMigration.cs

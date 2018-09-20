@@ -10,7 +10,7 @@ namespace Dain.Models
     {
         public Context() : base("DbDain") { }
 
-        //public DbSet<Pub> Pubs { get; set; }
-        //public DbSet<Person> Persons { get; set; }
+        public DbSet<Pub> Pubs { get; set; }
+        public DbSet<Person> Persons { get; set; }
     }
 }
