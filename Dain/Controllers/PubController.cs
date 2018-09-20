@@ -6,6 +6,9 @@ using System.Web.Mvc;
 using Dain.Models;
 using Dain.DAL;
 using Dain.Utils;
+using System.Net;
+using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace Dain.Controllers
 {
@@ -31,15 +34,16 @@ namespace Dain.Controllers
 
         public ActionResult Register(Pub pub)
         {
-            pub.AccessLevel = '1';
             pub.Rating = 0;
             pub.RegistrationDate = DateTime.Now;
             pub.UriGalery = "No";
             pub.State = "Paraná";
             pub.UserType = "Default";
+            pub = Geo(pub);
 
             if (ModelState.IsValid == true)
             {
+                pub.Email.ToLower();
                 if (PubDAO.Insert(pub) == true)
                 {
                     Sess.ReturnPubId(pub.Id);
@@ -48,6 +52,24 @@ namespace Dain.Controllers
                 else { return View("Login", pub); }
             }
             return View("Login", pub);
+        }
+
+        [HttpPost]
+        public Pub Geo(Pub pub)
+        {
+            string Address = pub.Address.Replace(" ", "+");
+            string url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + Address + "+" + pub.State + "&key=AIzaSyAq0VfrA_iDhSsQFW-wHlZ3X78rZ68GngI";
+            WebClient client = new WebClient();
+            string json = client.DownloadString(url);
+
+            byte[] bytes = Encoding.Default.GetBytes(json);
+            json = Encoding.UTF8.GetString(bytes);
+
+            JToken location = JObject.Parse(json)["results"][0]["geometry"]["location"];
+            pub.Lat = location["lat"].Value<double>();
+            pub.Lng = location["lng"].Value<double>();
+
+            return pub;
         }
 
         public ActionResult Dashboard()
@@ -70,7 +92,7 @@ namespace Dain.Controllers
             {
                 PubDAO.Delete(pub);
                 Sess.ClearPubSession();
-                return View("Login");
+                return RedirectToAction("Login");
             }
             else { return View("Account"); }
         }
@@ -78,7 +100,6 @@ namespace Dain.Controllers
         public ActionResult Update(Pub pubUpdate)
         {
             var pub = PubDAO.Search(Sess.ReturnPubId(null));
-            pubUpdate.AccessLevel = pub.AccessLevel;
             pubUpdate.Rating = pub.Rating;
             pubUpdate.RegistrationDate = pub.RegistrationDate;
             pubUpdate.UserType = pub.UserType;
@@ -87,10 +108,11 @@ namespace Dain.Controllers
             pubUpdate.Login = pub.Login;
             pubUpdate.Id = pub.Id;
             if (pubUpdate.Password == null) { pubUpdate.Password = pub.Password; }
+            pubUpdate = Geo(pubUpdate);
 
             if (PubDAO.Update(pubUpdate) == true)
             {
-                return View("Dashboard");
+                return RedirectToAction("Dashboard");
             }
             else { return View("Account"); }
         }
@@ -98,13 +120,7 @@ namespace Dain.Controllers
         public void ViewBags()
         {
             var pub = PubDAO.Search(Sess.ReturnPubId(null));
-            if (pub == null)
-            {
-                ViewBag.Name = "Null";
-            }
-            else { ViewBag.Name = pub.Name; }
-
-            //ViewBag.Image = pub.UriGalery;
+            if (pub == null){ ViewBag.Name = "Null"; } else { ViewBag.Name = pub.Name; };
         }
     }
 }

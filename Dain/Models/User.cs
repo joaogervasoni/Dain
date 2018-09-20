@@ -41,11 +41,6 @@ namespace Dain.Models
         public string UserType { get; set; }
 
         /// <summary>
-        /// The level of access that the <see cref="User"/> will have on the system
-        /// </summary>
-        public char AccessLevel { get; set; }
-
-        /// <summary>
         /// The date that the <see cref="User"/> was registered on the system
         /// </summary>
         public DateTime RegistrationDate { get; set; }

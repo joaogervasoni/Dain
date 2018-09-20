@@ -50,6 +50,9 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -123,9 +126,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201809201704218_FirstMigration.cs" />
-    <Compile Include="Migrations\201809201704218_FirstMigration.Designer.cs">
-      <DependentUpon>201809201704218_FirstMigration.cs</DependentUpon>
+    <Compile Include="Migrations\201809201801298_FirstMigration.cs" />
+    <Compile Include="Migrations\201809201801298_FirstMigration.Designer.cs">
+      <DependentUpon>201809201801298_FirstMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Base\Context.cs" />
@@ -165,8 +168,8 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201809201704218_FirstMigration.resx">
-      <DependentUpon>201809201704218_FirstMigration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201809201801298_FirstMigration.resx">
+      <DependentUpon>201809201801298_FirstMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

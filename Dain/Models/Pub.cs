@@ -53,5 +53,9 @@ namespace Dain.Models
         /// The path of the directory of the photos of the <see cref="Pub"/>
         /// </summary>
         public string UriGalery { get; set; }
+
+        public double Lat { get; set; }
+
+        public double Lng { get; set; }
     }
 }

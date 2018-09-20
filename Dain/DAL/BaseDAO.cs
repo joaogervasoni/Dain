@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Dain.DAL
 {
-    public class BaseDAO<T> where T : User
+    public abstract class BaseDAO<T> where T : User
     {
         private static Context db = SingletonContext.GetInstance();
         public static bool Insert(T entidade)
