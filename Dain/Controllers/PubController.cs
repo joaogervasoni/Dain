@@ -67,6 +67,13 @@ namespace Dain.Controllers
             return View("Login", pub);
         }
 
+        public ActionResult Product()
+        {
+            ViewBags();
+            ViewBag.ProductList = ProductDAO.ReturnList(Sess.ReturnPubId(null));
+            return View();
+        }
+
         [HttpPost]
         public Pub Geo(Pub pub)
         {
