@@ -60,5 +60,15 @@ namespace Dain.DAL
             { return null; }
         }
 
+        public static List<T> ReturnList()
+        {
+            try
+            {
+                return db.Set<T>().ToList();
+            }
+            catch
+            { return null; }
+        }
+
     }
 }

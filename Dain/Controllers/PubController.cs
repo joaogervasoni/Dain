@@ -10,6 +10,7 @@ using System.Net;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Dain.Controllers
 {
@@ -160,7 +161,9 @@ namespace Dain.Controllers
                 ViewBag.Image = pub.UriGalery + "/Profile_Image.jpg";
             }
             else { ViewBag.Image ="~/Content/Preview.png"; }
-            
+
+            var pubsList = PubDAO.ReturnList().Select(x => new { x.Id, x.Name, x.Rating, x.Lat, x.Lng, x.Address, x.FoundationDate }).ToList();
+            ViewBag.PubsList = JsonConvert.SerializeObject(pubsList);
         }
     }
 }
