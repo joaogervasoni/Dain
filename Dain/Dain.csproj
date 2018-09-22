@@ -119,21 +119,24 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\PersonController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\PubController.cs" />
     <Compile Include="DAL\BaseDAO.cs" />
     <Compile Include="DAL\PersonDAO.cs" />
+    <Compile Include="DAL\ProductDAO.cs" />
     <Compile Include="DAL\PubDAO.cs" />
     <Compile Include="DAL\SingletonContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201809201801298_FirstMigration.cs" />
-    <Compile Include="Migrations\201809201801298_FirstMigration.Designer.cs">
-      <DependentUpon>201809201801298_FirstMigration.cs</DependentUpon>
+    <Compile Include="Migrations\201809220122552_FirstMigration.cs" />
+    <Compile Include="Migrations\201809220122552_FirstMigration.Designer.cs">
+      <DependentUpon>201809220122552_FirstMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Base\Context.cs" />
     <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Pub.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -158,6 +161,7 @@
     <Content Include="Views\Shared\_Layout-Dashboard-Person.cshtml" />
     <Content Include="Views\Pub\Account.cshtml" />
     <Content Include="Views\Person\Account.cshtml" />
+    <Content Include="Views\Pub\Product.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -167,10 +171,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Product\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201809201801298_FirstMigration.resx">
-      <DependentUpon>201809201801298_FirstMigration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201809220122552_FirstMigration.resx">
+      <DependentUpon>201809220122552_FirstMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
