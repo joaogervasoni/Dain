@@ -12,27 +12,13 @@
 
         <img class="mb-4" src="~/Content/Dain-Logo.png" alt="" width="150" height="185">
         <h1 class="h3 mb-3 font-weight-normal">Login</h1>
-        @Html.ValidationSummary(true, null, new { @class = "text-danger" })
 
-        @Html.TextBoxFor(model => model.Email, new
-        {
-            @class = "form-control",
-            @placeholder = Html.DisplayNameFor(u => u.Email),
-            id = "EmailLogin",
-            required = "true",
-            type = "email"
-        })
-        @Html.ValidationMessageFor(model => model.Email, null, new { @class = "text-danger" })
+        @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = Html.DisplayNameFor(u => u.Email), id = "EmailLogin",
+            required = "true", type = "email" })
 
 
-        @Html.TextBoxFor(model => model.Password, new
-        {
-            @class = "form-control",
-            @placeholder = Html.DisplayNameFor(u => u.Password),
-            id = "PasswordLogin",
-            required = "true"
-        })
-        @Html.ValidationMessageFor(model => model.Password, null, new { @class = "text-danger" })
+        @Html.PasswordFor(model => model.Password, new { @class = "form-control", @placeholder = Html.DisplayNameFor(u => u.Password),
+            id = "PasswordLogin", required = "true" })
 
         <br />
 
