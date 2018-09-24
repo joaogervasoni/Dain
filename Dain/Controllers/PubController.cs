@@ -16,12 +16,47 @@ namespace Dain.Controllers
 {
     public class PubController : Controller
     {
-        // GET: Pub
+        #region Pub Registration
+        
         public ActionResult Register()
         {
+            // Get the user from the session that the User Controller generated with the basic data from the user
             var user = (User)System.Web.HttpContext.Current.Session["pub"];
+            System.Web.HttpContext.Current.Session["pub"] = null;
+
+            // If there is nothing in the user session, return to the user registration page
+            if (user == null) return RedirectToAction("Register", "User");
+
+            // Send user as a person model to the register pub view
             return View(new Pub(user));
         }
+        
+        [HttpPost]
+        public ActionResult Register(Pub newPub, HttpPostedFileBase upImage)
+        {
+            // Verify the if the model is valid
+            if (ModelState.IsValid == false) return View(newPub);
+
+            // Get the coordinates of the bar location that the user has given
+            Tuple<double, double> tuple = GoogleGeoLocation.GetCoordinates(newPub.Address, newPub.State);
+
+            // Set the remaining properties of the model
+            newPub.PhotoUrl = ImageHandler.HttpPostedFileBaseToByteArray(upImage);
+            newPub.PhotoType = upImage.ContentType;
+            newPub.RegistrationDate = DateTime.Now;
+            newPub.Lat = tuple.Item1;
+            newPub.Lng = tuple.Item2;
+
+            // Insert in the database, if successful
+            var returnedPub = PubDAO.Insert(newPub);
+            if (returnedPub == null) return View(newPub);
+            
+            // Generate a session with the user database id
+            UserSession.ReturnPubId(returnedPub.Id);
+            return RedirectToAction("Dashboard", "Pub");
+        }
+
+        #endregion
 
         [HttpPost]
         public ActionResult Login(string EmailLogin, string PasswordLogin)
@@ -33,27 +68,6 @@ namespace Dain.Controllers
                 return RedirectToAction("Dashboard", "Pub");
             }
             return View("Login");
-        }
-
-        [HttpPost]
-        public ActionResult Register(Pub pub, HttpPostedFileBase upImage)
-        {
-            var user = (User)System.Web.HttpContext.Current.Session["pub"];
-            System.Web.HttpContext.Current.Session["pub"] = null;
-
-            Pub newPub = new Pub(user, pub)
-            {
-                PhotoUrl = ImageHandler.HttpPostedFileBaseToByteArray(upImage),
-                PhotoType = upImage.ContentType
-            };
-
-            if (ModelState.IsValid == false) return View(newPub);
-            var returnedPub = PubDAO.Insert(newPub);
-            if (returnedPub == null) return View(newPub);
-                
-            UserSession.ReturnPubId(returnedPub.Id);
-            return RedirectToAction("Dashboard", "Pub");
-
         }
 
         public ActionResult Product()
@@ -154,13 +168,6 @@ namespace Dain.Controllers
         public void ViewBags()
         {
             var pub = PubDAO.Search(UserSession.ReturnPubId(null));
-            if (pub == null){ ViewBag.Name = "Null"; } else { ViewBag.Name = pub.Name; };
-            // ViewBag.Image = pub.PhotoUrl;
-            //if (pub.PhotoUrl != "No")
-            //{
-              //  ViewBag.Image = pub.PhotoUrl + "/Profile_Image.jpg";
-            //}
-            //else { ViewBag.Image ="~/Content/Preview.png"; }
 
             var pubsList = PubDAO.ReturnList().Select(x => new { x.Id, x.Name, x.Rating, x.Lat, x.Lng, x.Address, x.FoundationDate }).ToList();
             ViewBag.PubsList = JsonConvert.SerializeObject(pubsList);

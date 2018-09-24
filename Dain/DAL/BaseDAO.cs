@@ -39,11 +39,7 @@ namespace Dain.DAL
             db.SaveChanges();
         }
 
-        public static T Search(int? id)
-        {
-            int Id = int.Parse(id.ToString());
-            return db.Set<T>().Find(id);
-        }
+        public static T Search(int id) => db.Set<T>().Find(id);
 
         public static T Search(string Email, string Password)
         {
