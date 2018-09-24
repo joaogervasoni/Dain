@@ -1,6 +1,4 @@
-﻿using Dain.DAL;
-using Dain.Models;
-using Dain.Utils;
+﻿using Dain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +9,6 @@ namespace Dain.Controllers
 {
     public class UserController : Controller
     {
-        #region User Login
-
         // GET: User
         public ActionResult Login()
         {
@@ -22,26 +18,8 @@ namespace Dain.Controllers
         [HttpPost]
         public ActionResult Login(User user)
         {
-            var pub = PubDAO.Search(user.Email, user.Password);
-            var person = PersonDAO.Search(user.Email, user.Password);
-
-            if (pub != null)
-            {
-                UserSession.ReturnPubId(pub.Id);
-                return RedirectToAction("Dashboard", "Pub");
-            }
-            else if(person != null)
-            {
-                UserSession.ReturnPubId(person.Id);
-                return RedirectToAction("Dashboard", "Person");
-            }
-
-            return View("Login", user);
+            return View(user);
         }
-
-        #endregion 
-
-        #region User Registration
 
         public ActionResult Register()
         {
@@ -51,6 +29,7 @@ namespace Dain.Controllers
         [HttpPost]
         public ActionResult Register(User user, string button)
         {
+
             switch (button)
             {
                 case "PubType":
@@ -64,7 +43,5 @@ namespace Dain.Controllers
                 default: return View(user);
             }
         }
-
-        #endregion
     }
 }

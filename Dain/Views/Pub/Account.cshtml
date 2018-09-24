@@ -3,6 +3,8 @@
 
 @{
     ViewBag.Title = "Dashboard - Account";
+    ViewBag.Name = ViewBag.Name;
+    ViewBag.Image = ViewBag.Image;
     Layout = "~/Views/Shared/_Layout-Dashboard-Pub.cshtml";
 }
 
@@ -100,29 +102,19 @@
 </div>
 <div class="line-np">
     <div class="form-signin" id="imgForm" style="display:initial;">
-
         <div class="card text-center col-md-4">
-            <div id="card-body">
+            <div class="card-body">
                 @using (Html.BeginForm("UpdateImg", "Pub", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
-                    if (Model != null && !String.IsNullOrEmpty(Model.PhotoBase64()))
-                    {
-                        <img src="@Model.PhotoBase64()" id="output_image" class="rounded mx-auto d-block img-fluid" style="max-height: 180px; width: auto;">
-                    }
-                    else
-                    { <img src="~/Content/Preview.png" id="output_image" class="rounded mx-auto d-block img-fluid" style="max-height: 180px; width: auto;">}
-
+                    <img src="@ViewBag.Image" id="output_image" class="rounded mx-auto d-block img-fluid" style="max-height: 180px; width: auto;" />
                     <br />
-                    <div class="custom-file">
-                        <input type="file" accept="image/*" onchange="Preview_image(event)" class="custom-file-input" name="upImage" id="upImage">
-                        <label class="custom-file-label" id="label_image" for="upImage">Choose Photo</label>
-                    </div>
+
+                    <input type="file" accept="image/*" onchange="Preview_image(event)" class="form-control" name="upImage" id="upImage">
                     <br />
                     <button class="btn btn-outline-dark" type="submit">Change</button>
                 }
             </div>
         </div>
-
         <br />
     </div>
 </div>

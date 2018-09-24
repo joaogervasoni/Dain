@@ -50,15 +50,15 @@
     @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", required = "true", placeholder = "City" } })
 
     <br />
-    <label for="state">State</label>
-    <select name="state" class="form-control">
+    <label for="State">State</label>
+    <select class="form-control">
         <option>Paraná</option>
     </select>
     <br />
     <br />
     <br />
-    <input type="button" class="btn btn-outline-dark" id="Return" name="Return" value="Return" onclick="LoginJS();">
     <button class="btn btn-outline-dark" type="submit">Register</button>
+    <input type="button" class="btn btn-outline-dark" id="Return" name="Return" value="Return" onclick="LoginJS();">
 
     <p class="mt-5 mb-3 text-muted">&copy; 2018 - Dain</p>
 }

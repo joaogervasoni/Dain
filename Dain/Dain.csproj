@@ -106,7 +106,6 @@
     <Content Include="Content\Dain-Logo-Pub.png" />
     <Content Include="Content\Dain-Logo.png" />
     <Content Include="Content\Dashboard.css" />
-    <Content Include="Content\file-input.css" />
     <Content Include="Content\Login.css" />
     <Content Include="Content\Person.jpg" />
     <Content Include="Content\Preview.png" />
@@ -124,19 +123,13 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\fileImage.js" />
+    <Content Include="Scripts\Login.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Migrations\201809241617284_TestingMigration.cs" />
-    <Compile Include="Migrations\201809241617284_TestingMigration.Designer.cs">
-      <DependentUpon>201809241617284_TestingMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Utils\GoogleGeoLocation.cs" />
     <Compile Include="Controllers\PersonController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\PubController.cs" />
@@ -149,6 +142,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809240347111_Testing.cs" />
+    <Compile Include="Migrations\201809240347111_Testing.Designer.cs">
+      <DependentUpon>201809240347111_Testing.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Base\Context.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\Product.cs" />
@@ -196,8 +194,8 @@
     <Folder Include="Views\Product\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201809241617284_TestingMigration.resx">
-      <DependentUpon>201809241617284_TestingMigration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201809240347111_Testing.resx">
+      <DependentUpon>201809240347111_Testing.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
