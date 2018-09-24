@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 namespace Dain.Models
 {
     /// <summary>
-    /// The abstract model of user that will access the system
+    /// The model of user that will access the system
     /// </summary>
-    public abstract class User
+    public class User
     {
         [Key]
         /// <summary>
@@ -44,5 +44,15 @@ namespace Dain.Models
         /// The date that the <see cref="User"/> was registered on the system
         /// </summary>
         public DateTime RegistrationDate { get; set; }
+
+        public User() { }
+
+        public User(User user)
+        {
+            Email = user.Email;
+            Login = user.Login;
+            Password = user.Password;
+            RegistrationDate = DateTime.Now;
+        }
     }
 }

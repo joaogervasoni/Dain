@@ -1,0 +1,38 @@
+﻿@model Dain.Models.User
+
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout-Login.cshtml";
+}
+
+@using (Html.BeginForm("Register", "User", FormMethod.Post, new { @class = "form-signin", id = "registerForm" }))
+{
+<fieldset>
+
+    <img class="mb-4" src="~/Content/Dain-Logo.png" alt="" width="150" height="185">
+    <h1 class="h3 mb-3 font-weight-normal">Registration</h1>
+    @Html.ValidationSummary(true, null, new { @class = "text-danger" })
+
+    <br />
+    <label for="account">Step 1 - Basic Account Information:</label>
+    <br />
+
+    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", required = "true",
+        placeholder = "Email", type = "email" }})
+
+    @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "form-control", required = "true",
+        placeholder = "Login", style = "margin-bottom: -1px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;" }})
+
+    @Html.PasswordFor(model => model.Password, new { @class = "form-control text-box single-line", required = "true", placeholder = "Password" })
+
+    <br />
+    <label for="account">Step 2 - Choose your Account Type:</label>
+    <br />
+    <button name="button" class="btn btn-outline-dark" value="PubType" type="submit">Pub</button>
+    <button name="button" class="btn btn-outline-dark" value="PersonType" type="submit">Person</button>
+
+    <p class="mt-5 mb-3 text-muted">&copy; 2018 - Dain</p>
+
+</fieldset>
+}
+

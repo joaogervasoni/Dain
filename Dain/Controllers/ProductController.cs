@@ -14,9 +14,9 @@ namespace Dain.Controllers
     {
         public ActionResult Register(Product product, HttpPostedFileBase upImage)
         {
-            var pub = PubDAO.Search(Sess.ReturnPubId(null));
+            var pub = PubDAO.Search(UserSession.ReturnPubId(null));
             Guid guid = Guid.NewGuid();
-            product.PubId = Sess.ReturnPubId(null);
+            product.PubId = UserSession.ReturnPubId(null);
 
             if (ModelState.IsValid == true)
             {

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Dain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
 namespace Dain.Utils
 {
-    public class Sess
+    public class UserSession
     {
         public static int ReturnPubId(int? id)
         {
@@ -36,5 +37,6 @@ namespace Dain.Utils
         {
             HttpContext.Current.Session["PersonID"] = null;
         }
+        
     }
 }

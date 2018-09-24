@@ -1,0 +1,64 @@
+﻿@model Dain.Models.Pub
+
+@{
+    Layout = "~/Views/Shared/_Layout-Login.cshtml";
+    ViewBag.Title = "Login - Pub";
+}
+
+@using (Html.BeginForm("Register", "Pub", FormMethod.Post, new { @class = "form-signin", id = "registerForm", enctype = "multipart/form-data" }))
+{
+    <h1 class="h3 mb-3 font-weight-normal">Cadastro - Pub</h1>
+    <br />
+    <br />
+
+    
+    @Html.HiddenFor(model => model.Email)
+    @Html.HiddenFor(model => model.Login)
+    @Html.HiddenFor(model => model.Password)
+
+
+    <div id="wrapper">
+        @if (Model != null && !String.IsNullOrEmpty(Model.PhotoBase64()))
+        {
+            <img src="@Model.PhotoBase64()" id="output_image" class="rounded mx-auto d-block">
+        }
+        else
+        { <img src="~/Content/Preview.png" id="output_image" class="rounded mx-auto d-block">}
+
+        <br />
+        <div class="custom-file">
+            <input type="file" accept="image/*" onchange="Preview_image(event)" class="custom-file-input" name="upImage" id="upImage">
+            <label class="custom-file-label" id="label_image" for="upImage">Choose Photo</label>
+        </div>
+        <br />
+    </div>
+    <br />
+
+    <label for="registerName">Name</label>
+    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", required = "true", placeholder = "Name" } })
+
+    <br />
+    <label for="registerFoundationDate">Foundation Date</label>
+    @Html.EditorFor(model => model.FoundationDate, new { htmlAttributes = new { @class = "form-control", type = "date", required = "true", placeholder = "FoudationDate" } })
+
+    <br />
+    <label for="registerAddress">Address</label>
+    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", required = "true", placeholder = "Address" } })
+
+    <br />
+    <label for="registerCity">City</label>
+    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", required = "true", placeholder = "City" } })
+
+    <br />
+    <label for="State">State</label>
+    <select class="form-control">
+        <option>Paraná</option>
+    </select>
+    <br />
+    <br />
+    <br />
+    <button class="btn btn-outline-dark" type="submit">Register</button>
+    <input type="button" class="btn btn-outline-dark" id="Return" name="Return" value="Return" onclick="LoginJS();">
+
+    <p class="mt-5 mb-3 text-muted">&copy; 2018 - Dain</p>
+}

@@ -8,6 +8,21 @@ namespace Dain.Models
     /// </summary>
     public class Pub : User
     {
+        public Pub() { }
+
+        public Pub(User user) : base(user) { }
+
+        public Pub(User user, Pub pub) : base(user)
+        {
+            Name = pub.Name;
+            Address = pub.Address;
+            City = pub.City;
+            State = pub.State;
+            FoundationDate = pub.FoundationDate;
+            PhotoUrl = pub.PhotoUrl;
+            UserType = nameof(Pub);
+        }
+
         /// <summary>
         /// The name of the <see cref="Pub"/>
         /// </summary>
@@ -52,10 +67,20 @@ namespace Dain.Models
         /// <summary>
         /// The path of the directory of the photos of the <see cref="Pub"/>
         /// </summary>
-        public string UriGalery { get; set; }
+        public byte[] PhotoUrl { get; set; }
+        public string PhotoType { get; set; }
+
 
         public double Lat { get; set; }
 
         public double Lng { get; set; }
+
+        public string PhotoBase64()
+        {
+            if (PhotoUrl != null) return string.Format($"data:{PhotoType};base64,{Convert.ToBase64String(PhotoUrl)}");
+            return null;
+
+        }
+
     }
 }

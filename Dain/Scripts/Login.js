@@ -13,6 +13,17 @@ function Preview_image(event) {
     reader.onload = function () {
         var output = document.getElementById('output_image');
         output.src = reader.result;
+
+
+        var label = document.getElementById('label_image');
+        var path = String(document.getElementById('upImage').value).split('\\').pop();
+
+        if (path.length > 26) {
+            label.textContent = path.substr(0, 13) + "..." + path.substring(path.length - 10);
+
+        }
+        else
+            label.textContent = path;
     }
     reader.readAsDataURL(event.target.files[0]);
 }

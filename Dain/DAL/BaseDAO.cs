@@ -10,25 +10,20 @@ namespace Dain.DAL
     public abstract class BaseDAO<T> where T : User
     {
         private static Context db = SingletonContext.GetInstance();
-        public static bool Insert(T entidade)
+        public static T Insert(T entity)
         {
-            try
-            {
-                db.Set<T>().Add(entidade);
+                var returnEntity = db.Set<T>().Add(entity);
                 db.SaveChanges();
-                return true;
-            }
-            catch { return false; }
-
+                return returnEntity;
         }
 
-        public static bool Update(T entidade)
+        public static bool Update(T entity)
         {
             try
             {
-                var local = db.Set<T>().Local.FirstOrDefault(f => f.Id == entidade.Id);
+                var local = db.Set<T>().Local.FirstOrDefault(f => f.Id == entity.Id);
                 db.Entry(local).State = EntityState.Detached;
-                db.Entry(entidade).State = EntityState.Modified;
+                db.Entry(entity).State = EntityState.Modified;
                 db.SaveChanges();
                 return true;
             }
@@ -36,10 +31,10 @@ namespace Dain.DAL
             { return false; }
         }
 
-        public static void Delete(T entidade)
+        public static void Delete(T entity)
         {
-            db.Entry<T>(entidade).State = EntityState.Deleted;
-            db.Set<T>().Remove(entidade);
+            db.Entry<T>(entity).State = EntityState.Deleted;
+            db.Set<T>().Remove(entity);
 
             db.SaveChanges();
         }

@@ -34,7 +34,16 @@
 
                         <li class="nav-item" align="center">
                             <div class="profileimage img-thumbnail" style="margin:auto;">
-                                <a href="@Url.Action("Account", "Person", null)"><img src="@ViewBag.Image"></a>
+                                <a href="@Url.Action("Account", "Person", null)">
+                                    @if (Model != null && !String.IsNullOrEmpty(Model.PhotoBase64()))
+                                    {
+                                        <img src="@Model.PhotoBase64()">
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Content/Preview.png">
+                                    }
+                                </a>
                             </div>
                         </li>
 

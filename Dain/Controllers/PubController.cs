@@ -17,9 +17,10 @@ namespace Dain.Controllers
     public class PubController : Controller
     {
         // GET: Pub
-        public ActionResult Login()
+        public ActionResult Register()
         {
-            return View();
+            var user = (User)System.Web.HttpContext.Current.Session["pub"];
+            return View(new Pub(user));
         }
 
         [HttpPost]
@@ -28,7 +29,7 @@ namespace Dain.Controllers
             var pub = PubDAO.Search(EmailLogin, PasswordLogin);
             if (pub != null)
             {
-                Sess.ReturnPubId(pub.Id);
+                UserSession.ReturnPubId(pub.Id);
                 return RedirectToAction("Dashboard", "Pub");
             }
             return View("Login");
@@ -37,40 +38,28 @@ namespace Dain.Controllers
         [HttpPost]
         public ActionResult Register(Pub pub, HttpPostedFileBase upImage)
         {
-            pub.Rating = 0;
-            pub.RegistrationDate = DateTime.Now;
-            pub.State = "Paraná";
-            pub.UserType = "Default";
-            pub = Geo(pub);
-            pub.Email.ToLower();
+            var user = (User)System.Web.HttpContext.Current.Session["pub"];
+            System.Web.HttpContext.Current.Session["pub"] = null;
 
-            if (ModelState.IsValid == true)
+            Pub newPub = new Pub(user, pub)
             {
-                if (upImage != null)
-                {
-                    Directory.CreateDirectory(Server.MapPath("~/Images/Pub/" + pub.Name));
-                    string name = Path.GetFileName(upImage.FileName);
-                    string path = Path.Combine(Server.MapPath("~/Images/Pub/" + pub.Name), ("Profile_Image" + Path.GetExtension(upImage.FileName)));
+                PhotoUrl = ImageHandler.HttpPostedFileBaseToByteArray(upImage),
+                PhotoType = upImage.ContentType
+            };
 
-                    upImage.SaveAs(path);
-                    pub.UriGalery = "/Images/Pub/" + pub.Name;
-                }
-                else { pub.UriGalery = "No"; }
+            if (ModelState.IsValid == false) return View(newPub);
+            var returnedPub = PubDAO.Insert(newPub);
+            if (returnedPub == null) return View(newPub);
+                
+            UserSession.ReturnPubId(returnedPub.Id);
+            return RedirectToAction("Dashboard", "Pub");
 
-                if (PubDAO.Insert(pub) == true)
-                {
-                    Sess.ReturnPubId(pub.Id);
-                    return RedirectToAction("Dashboard", "Pub");
-                }
-                else { return View("Login", pub); }
-            }
-            return View("Login", pub);
         }
 
         public ActionResult Product()
         {
             ViewBags();
-            ViewBag.ProductList = ProductDAO.ReturnList(Sess.ReturnPubId(null));
+            ViewBag.ProductList = ProductDAO.ReturnList(UserSession.ReturnPubId(null));
             return View();
         }
 
@@ -95,23 +84,27 @@ namespace Dain.Controllers
         public ActionResult Dashboard()
         {
             ViewBags();
-            return View();
+            var pubSession = PubDAO.Search(UserSession.ReturnPubId(null));
+
+            if (pubSession == null) RedirectToAction("Login", "User");
+
+            return View(pubSession);
         }
 
         public ActionResult Account()
         {
-            var pub = PubDAO.Search(Sess.ReturnPubId(null));
+            var returnedPub = PubDAO.Search(UserSession.ReturnPubId(null));
             ViewBags();
-            return View(pub);
+            return View(returnedPub);
         }
 
         public ActionResult Delete(string Password)
         {
-            var pub = PubDAO.Search(Sess.ReturnPubId(null));
+            var pub = PubDAO.Search(UserSession.ReturnPubId(null));
             if (Password == pub.Password)
             {
                 PubDAO.Delete(pub);
-                Sess.ClearPubSession();
+                UserSession.ClearPubSession();
                 return RedirectToAction("Login");
             }
             else { return View("Account"); }
@@ -119,12 +112,12 @@ namespace Dain.Controllers
 
         public ActionResult Update(Pub pubUpdate)
         {
-            var pub = PubDAO.Search(Sess.ReturnPubId(null));
+            var pub = PubDAO.Search(UserSession.ReturnPubId(null));
             pubUpdate.Rating = pub.Rating;
             pubUpdate.RegistrationDate = pub.RegistrationDate;
             pubUpdate.UserType = pub.UserType;
             pubUpdate.State = pub.State;
-            pubUpdate.UriGalery = pub.UriGalery;
+            pubUpdate.PhotoUrl = pub.PhotoUrl;
             pubUpdate.Login = pub.Login;
             pubUpdate.Id = pub.Id;
             if (pubUpdate.Password == null) { pubUpdate.Password = pub.Password; }
@@ -140,7 +133,7 @@ namespace Dain.Controllers
         [HttpPost]
         public ActionResult UpdateImg(HttpPostedFileBase upImage)
         {
-            var pub = PubDAO.Search(Sess.ReturnPubId(null));
+            var pub = PubDAO.Search(UserSession.ReturnPubId(null));
             if (upImage != null)
             {
                 if(!Directory.Exists(Server.MapPath("~/Images/Pub/" + pub.Name)))
@@ -160,14 +153,14 @@ namespace Dain.Controllers
 
         public void ViewBags()
         {
-            var pub = PubDAO.Search(Sess.ReturnPubId(null));
+            var pub = PubDAO.Search(UserSession.ReturnPubId(null));
             if (pub == null){ ViewBag.Name = "Null"; } else { ViewBag.Name = pub.Name; };
-
-            if (pub.UriGalery != "No")
-            {
-                ViewBag.Image = pub.UriGalery + "/Profile_Image.jpg";
-            }
-            else { ViewBag.Image ="~/Content/Preview.png"; }
+            // ViewBag.Image = pub.PhotoUrl;
+            //if (pub.PhotoUrl != "No")
+            //{
+              //  ViewBag.Image = pub.PhotoUrl + "/Profile_Image.jpg";
+            //}
+            //else { ViewBag.Image ="~/Content/Preview.png"; }
 
             var pubsList = PubDAO.ReturnList().Select(x => new { x.Id, x.Name, x.Rating, x.Lat, x.Lng, x.Address, x.FoundationDate }).ToList();
             ViewBag.PubsList = JsonConvert.SerializeObject(pubsList);
