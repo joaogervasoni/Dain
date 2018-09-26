@@ -20,15 +20,8 @@ namespace Dain.Controllers
 
             if (ModelState.IsValid == true)
             {
-                if (upImage != null)
-                {
-                    string name = Path.GetFileName(upImage.FileName);
-                    string path = Path.Combine(Server.MapPath("~/Images/Pub/" + pub.Name), ("Product_" + guid.ToString() + Path.GetExtension(upImage.FileName)));
-
-                    upImage.SaveAs(path);
-                    product.UriImage = "/Images/Pub/" + pub.Name + "/Product_" + guid.ToString() + Path.GetExtension(upImage.FileName);
-                }
-                else { product.UriImage = "/Content/Preview.png"; }
+                product.PhotoUrl = ImageHandler.HttpPostedFileBaseToByteArray(upImage);
+                product.PhotoType = upImage.ContentType;
 
                 ProductDAO.Insert(product);
                 return RedirectToAction("Product", "Pub");

@@ -131,10 +131,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Migrations\201809241617284_TestingMigration.cs" />
-    <Compile Include="Migrations\201809241617284_TestingMigration.Designer.cs">
-      <DependentUpon>201809241617284_TestingMigration.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Utils\GoogleGeoLocation.cs" />
     <Compile Include="Controllers\PersonController.cs" />
@@ -194,11 +190,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Product\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201809241617284_TestingMigration.resx">
-      <DependentUpon>201809241617284_TestingMigration.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

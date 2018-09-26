@@ -5,7 +5,7 @@
     List<Product> Products = ViewBag.ProductList;
     ViewBag.Title = "Dashboard - Product";
     ViewBag.Name = ViewBag.Name;
-    ViewBag.Imagem = ViewBag.Image;
+    ViewBag.Profile = ViewBag.Profile;
     Layout = "~/Views/Shared/_Layout-Dashboard-Pub.cshtml";
 }
 
@@ -27,22 +27,30 @@
     <div class="line-np card-deck">
         @foreach (Product product in Products)
         {
-            <div class="card col-lg-2" style="min-height:200px; min-width:200px">
-                <img class="card-img-top" src="@product.UriImage" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">@product.Name</h5>
-                    <p class="card-text">@product.Description</p>
-                </div>
+        <div class="card col-lg-2" style="min-height:200px; min-width:200px">
+            @if (@product.PhotoBase64() != null)
+            {
+                <img class="card-img-top" src="@product.PhotoBase64()" alt="Card image cap">
+            }
+            else
+            {
+                <img class="card-img-top" src="~/Content/Preview.png" alt="Card image cap">
+            }
 
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><b>Price: </b>@product.Price</li>
-                </ul>
-
-                <div class="card-body">
-                    @*@Html.ActionLink("Change", "Change", "Product", null, null)*@
-                    @Html.ActionLink("Delete", "Delete", "Product", new { id = product.Id }, null)
-                </div>
+            <div class="card-body">
+                <h5 class="card-title">@product.Name</h5>
+                <p class="card-text">@product.Description</p>
             </div>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><b>Price: </b>@product.Price</li>
+            </ul>
+
+            <div class="card-body">
+                @*@Html.ActionLink("Change", "Change", "Product", null, null)*@
+                @Html.ActionLink("Delete", "Delete", "Product", new { id = product.Id }, null)
+            </div>
+        </div>
         }
     </div>
 </div>
@@ -80,7 +88,6 @@
                         <label class="custom-file-label" id="label_image" for="upImage">Choose Photo</label>
                     </div>
                     <br />
-                    <button class="btn btn-outline-dark" type="submit">Change</button>
                 }
 
             </div>

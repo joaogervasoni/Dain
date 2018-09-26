@@ -39,10 +39,28 @@ namespace Dain.Models
         [Required]
         [Display(Name = "Price")]
         public double Price { get; set; }
+        /// <summary>
+        /// The path of the directory of the photos of the pub
+        /// </summary>
+        public byte[] PhotoUrl { get; set; }
 
         /// <summary>
-        /// The name of the <see cref="Product"/>
+        /// The type of the photo to add to the reponse headers to be send to the browser
         /// </summary>
-        public string UriImage { get; set; }
+        public string PhotoType { get; set; }
+
+        #region Methods
+
+        /// <summary>
+        /// This is a helper method to encode the image byte array to a format that the browser will understand
+        /// </summary>
+        /// <returns>A image in base64</returns>
+        public string PhotoBase64()
+        {
+            if (PhotoUrl == null) return null;
+            return string.Format($"data:{PhotoType};base64,{Convert.ToBase64String(PhotoUrl)}");
+        }
+
+        #endregion
     }
 }

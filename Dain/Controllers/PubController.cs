@@ -73,7 +73,9 @@ namespace Dain.Controllers
         public ActionResult Product()
         {
             ViewBags();
-            ViewBag.ProductList = ProductDAO.ReturnList(UserSession.ReturnPubId(null));
+            var pubSession = PubDAO.Search(UserSession.ReturnPubId(null));
+            ViewBag.ProductList = ProductDAO.ReturnList(pubSession.Id);
+
             return View();
         }
 
@@ -150,15 +152,10 @@ namespace Dain.Controllers
             var pub = PubDAO.Search(UserSession.ReturnPubId(null));
             if (upImage != null)
             {
-                if(!Directory.Exists(Server.MapPath("~/Images/Pub/" + pub.Name)))
-                {
-                    Directory.CreateDirectory(Server.MapPath("~/Images/Pub/" + pub.Name));
-                }
+                pub.PhotoUrl = ImageHandler.HttpPostedFileBaseToByteArray(upImage);
+                pub.PhotoType = upImage.ContentType;
+                PubDAO.Update(pub);
 
-                string name = Path.GetFileName(upImage.FileName);
-                string path = Path.Combine(Server.MapPath("~/Images/Pub/" + pub.Name), "Profile_Image.jpg");
-
-                upImage.SaveAs(path);
                 return RedirectToAction("Account", "Pub");
 
             } else { return View("Account"); }
@@ -171,6 +168,8 @@ namespace Dain.Controllers
 
             var pubsList = PubDAO.ReturnList().Select(x => new { x.Id, x.Name, x.Rating, x.Lat, x.Lng, x.Address, x.FoundationDate }).ToList();
             ViewBag.PubsList = JsonConvert.SerializeObject(pubsList);
+            ViewBag.Name = pub.Name;
+            ViewBag.Profile = pub.PhotoBase64();
         }
     }
 }
