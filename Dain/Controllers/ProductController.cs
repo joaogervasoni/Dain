@@ -12,11 +12,13 @@ namespace Dain.Controllers
 {
     public class ProductController : Controller
     {
-        public ActionResult Register(Product product, HttpPostedFileBase upImage)
+        public ActionResult Register(Product product, HttpPostedFileBase upImage, int? Categories)
         {
             var pub = PubDAO.Search(UserSession.ReturnPubId(null));
             Guid guid = Guid.NewGuid();
             product.PubId = UserSession.ReturnPubId(null);
+            ViewBag.Categories = new SelectList(CategoryDAO.ReturnList(), "Id", "Name");
+            product.Category = CategoryDAO.Search(Categories);
 
             if (ModelState.IsValid == true)
             {

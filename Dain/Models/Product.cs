@@ -39,6 +39,10 @@ namespace Dain.Models
         [Required]
         [Display(Name = "Price")]
         public double Price { get; set; }
+
+        [Display(Name = "Category")]
+        public Category Category { get; set; }
+
         /// <summary>
         /// The path of the directory of the photos of the pub
         /// </summary>

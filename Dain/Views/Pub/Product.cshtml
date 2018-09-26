@@ -44,6 +44,16 @@
 
             <ul class="list-group list-group-flush">
                 <li class="list-group-item"><b>Price: </b>@product.Price</li>
+                @if (@product.Category != null)
+                {
+                    <li class="list-group-item"><b>Category: </b>@product.Category.Name</li>
+                }
+                else
+                {
+                    <li class="list-group-item"><b>Category: </b>None</li>
+                }
+
+
             </ul>
 
             <div class="card-body">
@@ -90,6 +100,15 @@
                     <br />
                 }
 
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Category,
+                new { @class = "control-label col-md-2" })
+            <div class="col-sm-10">
+                @Html.DropDownList("Categories", null,
+                    "None" , new { @class = "form-control col-md-2" })
             </div>
         </div>
         <br />
