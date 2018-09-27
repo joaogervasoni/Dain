@@ -36,7 +36,21 @@ namespace Dain.DAL
             catch { return false; }
         }
 
-        public static Product Search(int id)
+        public static bool Update(Product product)
+        {
+            try
+            {
+                var local = db.Products.Local.FirstOrDefault(f => f.Id == product.Id);
+                db.Entry(local).State = EntityState.Detached;
+                db.Entry(product).State = EntityState.Modified;
+                db.SaveChanges();
+                return true;
+            }
+            catch
+            { return false; }
+        }
+
+        public static Product Search(int? id)
         {
             try
             {

@@ -75,11 +75,21 @@ namespace Dain.Controllers
             ViewBags();
             var pubSession = PubDAO.Search(UserSession.ReturnPubId(null));
             ViewBag.ProductList = ProductDAO.ReturnList(pubSession.Id);
-            ViewBag.Categories =
-               new MultiSelectList(CategoryDAO.ReturnList(),
-               "Id", "Name");
+            ViewBag.Categories = new MultiSelectList(CategoryDAO.ReturnList(),"Id", "Name");
+            try
+            {
+                var product = (Product)System.Web.HttpContext.Current.Session["product"];
+                if (product != null)
+                {
+                    ViewBag.Alter = "Yes";
+                    return View(product);
+                }
+            }
+            catch { }
 
+            ViewBag.Alter = "No";
             return View();
+
         }
 
         [HttpPost]

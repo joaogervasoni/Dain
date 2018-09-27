@@ -32,6 +32,50 @@ namespace Dain.Controllers
             return RedirectToAction("Product", "Pub");
         }
 
+        [HttpGet]
+        public ActionResult Update(int? id)
+        {
+            if (id != null)
+            {
+                var product = ProductDAO.Search(id);
+                System.Web.HttpContext.Current.Session["product"] = product;
+            }
+            
+            return RedirectToAction("Product", "Pub", null);
+        }
+
+        [HttpPost]
+        public ActionResult Update(Product productUpdate, HttpPostedFileBase upImage, int? Categories)
+        {
+            var product = (Product)System.Web.HttpContext.Current.Session["product"];
+            System.Web.HttpContext.Current.Session["product"] = null;
+
+            productUpdate.Id = product.Id;
+            productUpdate.PubId = product.PubId;
+            if (Categories == null)
+            {
+                productUpdate.Category = null;
+            }
+            else
+            {
+                productUpdate.Category = CategoryDAO.Search(Categories);
+            }
+            
+            if (upImage == null)
+            {
+                productUpdate.PhotoUrl = product.PhotoUrl;
+                productUpdate.PhotoType = product.PhotoType;
+            }
+            else
+            {
+                productUpdate.PhotoUrl = ImageHandler.HttpPostedFileBaseToByteArray(upImage);
+                productUpdate.PhotoType = upImage.ContentType;
+            }
+            
+            ProductDAO.Update(productUpdate);
+            return RedirectToAction("Product", "Pub");
+        }
+
         public ActionResult Delete(int id)
         {
             ProductDAO.Delete(id);

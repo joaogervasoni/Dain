@@ -7,112 +7,171 @@
     ViewBag.Name = ViewBag.Name;
     ViewBag.Profile = ViewBag.Profile;
     Layout = "~/Views/Shared/_Layout-Dashboard-Pub.cshtml";
+    string Alter = ViewBag.Alter;
 }
 
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link active" style="color:dodgerblue; cursor: pointer;" onclick="ShowProduct(1)" id="nav2">Products</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link " style="color:dodgerblue; cursor: pointer;" onclick="ShowProduct(2)" id="nav1">Register Product</a>
-    </li>
-</ul>
 
-<div id="showForm" style="display:initial;">
-
-    <div class="line">
-        <h5 style="color:dodgerblue;">Products</h5>
-    </div>
-
-    <div class="line-np card-deck">
-        @foreach (Product product in Products)
-        {
-        <div class="card col-lg-2" style="min-height:200px; min-width:200px">
-            @if (@product.PhotoBase64() != null)
-            {
-                <img class="card-img-top" src="@product.PhotoBase64()" alt="Card image cap">
-            }
-            else
-            {
-                <img class="card-img-top" src="~/Content/Preview.png" alt="Card image cap">
-            }
-
-            <div class="card-body">
-                <h5 class="card-title">@product.Name</h5>
-                <p class="card-text">@product.Description</p>
-            </div>
-
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><b>Price: </b>@product.Price</li>
-                @if (@product.Category != null)
-                {
-                    <li class="list-group-item"><b>Category: </b>@product.Category.Name</li>
-                }
-                else
-                {
-                    <li class="list-group-item"><b>Category: </b>None</li>
-                }
-
-
-            </ul>
-
-            <div class="card-body">
-                @*@Html.ActionLink("Change", "Change", "Product", null, null)*@
-                @Html.ActionLink("Delete", "Delete", "Product", new { id = product.Id }, null)
-            </div>
-        </div>
-        }
-    </div>
-</div>
-
-@using (Html.BeginForm("Register", "Product", FormMethod.Post, new { @class = "form-signin", style = "display:none;", id = "registerForm", enctype = "multipart/form-data" }))
+@if (Alter == "Yes")
 {
-    <div class="line">
-        <h5 style="color:dodgerblue;">Register Product</h5>
-    </div>
+    using (Html.BeginForm("Update", "Product", FormMethod.Post, new { @class = "form-signin", style = "display:initial;", id = "updateForm", enctype = "multipart/form-data" }))
+    {
+        <div class="line">
+            <h5 style="color:dodgerblue;">Change Product</h5>
+        </div>
 
-    <div class="line">
+        <div class="line">
 
-        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control col-md-5", required = "true", placeholder = "Name" } })
-        <br />
-        @Html.LabelFor(model => model.Description, new { htmlAttributes = new { @class = "sr-only" } })
-        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control col-md-5", required = "true", praceholder = "Description" } })
-        <br />
-        @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control col-md-2", required = "true", placeholder = "Price" } })
-        <br />
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control col-md-5", required = "true", placeholder = "Name" } })
+            <br />
+            @Html.LabelFor(model => model.Description, new { htmlAttributes = new { @class = "sr-only" } })
+            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control col-md-5", required = "true", praceholder = "Description" } })
+            <br />
+            @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control col-md-2", required = "true", placeholder = "Price" } })
+            <br />
 
-        <div class="card text-center col-md-4">
-            <div id="card-body">
-                @using (Html.BeginForm("UpdateImg", "Pub", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                {
-                    if (Model != null && !String.IsNullOrEmpty(Model.PhotoBase64()))
+            <div class="card text-center col-md-4">
+                <div id="card-body">
+
+                        @if (Model != null && !String.IsNullOrEmpty(Model.PhotoBase64()))
+                        {
+                            <img src="@Model.PhotoBase64()" id="output_image" class="rounded mx-auto d-block img-fluid" style="max-height: 180px; width: auto;">
+                        }
+                        else
+                        { <img src="~/Content/Preview.png" id="output_image" class="rounded mx-auto d-block img-fluid" style="max-height: 180px; width: auto;">}
+
+                        <br />
+                        <div class="custom-file">
+                            <input type="file" accept="image/*" onchange="Preview_image(event)" class="custom-file-input" name="upImage" id="upImage">
+                            <label class="custom-file-label" id="label_image" for="upImage">Choose Photo</label>
+                        </div>
+                        <br />
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Category,
+                    new { @class = "control-label col-md-2" })
+                <div class="col-sm-10">
+                    @Html.DropDownList("Categories", null,
+                        "None" , new { @class = "form-control col-md-2" })
+                </div>
+            </div>
+            <br />
+
+            <button class="btn btn-outline-dark" type="submit">Change</button>
+        </div>
+    }
+}
+else
+{
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" style="color:dodgerblue; cursor: pointer;" onclick="ShowProduct(1)" id="nav2">Products</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " style="color:dodgerblue; cursor: pointer;" onclick="ShowProduct(2)" id="nav1">Product</a>
+        </li>
+    </ul>
+
+    <div id="showForm" style="display:initial;">
+
+        <div class="line">
+            <h5 style="color:dodgerblue;">Products</h5>
+        </div>
+
+        <div class="line-np card-deck">
+            @foreach (Product product in Products)
+            {
+                <div class="card col-lg-2" style="min-height:200px; min-width:200px">
+                    @if (@product.PhotoBase64() != null)
                     {
-                        <img src="@Model.PhotoBase64()" id="output_image" class="rounded mx-auto d-block img-fluid" style="max-height: 180px; width: auto;">
+                        <img class="card-img-top" src="@product.PhotoBase64()" alt="Card image cap">
                     }
                     else
-                    { <img src="~/Content/Preview.png" id="output_image" class="rounded mx-auto d-block img-fluid" style="max-height: 180px; width: auto;">}
+                    {
+                        <img class="card-img-top" src="~/Content/Preview.png" alt="Card image cap">
+                    }
 
-                    <br />
-                    <div class="custom-file">
-                        <input type="file" accept="image/*" onchange="Preview_image(event)" class="custom-file-input" name="upImage" id="upImage">
-                        <label class="custom-file-label" id="label_image" for="upImage">Choose Photo</label>
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">@product.Description</p>
                     </div>
-                    <br />
-                }
 
-            </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><b>Price: </b>@product.Price</li>
+                        @if (@product.Category != null)
+                        {
+                            <li class="list-group-item"><b>Category: </b>@product.Category.Name</li>
+                        }
+                        else
+                        {
+                            <li class="list-group-item"><b>Category: </b>None</li>
+                        }
+
+
+                    </ul>
+
+                    <div class="card-body">
+                        @Html.ActionLink("Update", "Update", "Product", new { id = product.Id }, null)
+                        @Html.ActionLink("Delete", "Delete", "Product", new { id = product.Id }, null)
+                    </div>
+                </div>
+            }
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Category,
-                new { @class = "control-label col-md-2" })
-            <div class="col-sm-10">
-                @Html.DropDownList("Categories", null,
-                    "None" , new { @class = "form-control col-md-2" })
-            </div>
-        </div>
-        <br />
-
-        <button class="btn btn-outline-dark" type="submit">Registrar</button>
     </div>
+
+
+    using (Html.BeginForm("Register", "Product", FormMethod.Post, new { @class = "form-signin", style = "display:none;", id = "registerForm", enctype = "multipart/form-data" }))
+    {
+        <div class="line">
+            <h5 style="color:dodgerblue;">Register Product</h5>
+        </div>
+
+        <div class="line">
+
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control col-md-5", required = "true", placeholder = "Name" } })
+            <br />
+            @Html.LabelFor(model => model.Description, new { htmlAttributes = new { @class = "sr-only" } })
+            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control col-md-5", required = "true", praceholder = "Description" } })
+            <br />
+            @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control col-md-2", required = "true", placeholder = "Price" } })
+            <br />
+
+            <div class="card text-center col-md-4">
+                <div id="card-body">
+                    @using (Html.BeginForm("UpdateImg", "Pub", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        if (Model != null && !String.IsNullOrEmpty(Model.PhotoBase64()))
+                        {
+                            <img src="@Model.PhotoBase64()" id="output_image" class="rounded mx-auto d-block img-fluid" style="max-height: 180px; width: auto;">
+                        }
+                        else
+                        { <img src="~/Content/Preview.png" id="output_image" class="rounded mx-auto d-block img-fluid" style="max-height: 180px; width: auto;">}
+
+                        <br />
+                        <div class="custom-file">
+                            <input type="file" accept="image/*" onchange="Preview_image(event)" class="custom-file-input" name="upImage" id="upImage">
+                            <label class="custom-file-label" id="label_image" for="upImage">Choose Photo</label>
+                        </div>
+                        <br />
+                    }
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Category,
+                    new { @class = "control-label col-md-2" })
+                <div class="col-sm-10">
+                    @Html.DropDownList("Categories", null,
+                        "None" , new { @class = "form-control col-md-2" })
+                </div>
+            </div>
+            <br />
+
+            <button class="btn btn-outline-dark" type="submit">Register</button>
+        </div>
+    }
 }
+
