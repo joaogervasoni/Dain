@@ -9,6 +9,7 @@
 
 <div class="line">
     <h5 style="color:dodgerblue;">Account Details</h5>
+    @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
 </div>
 
 <div class="line-np">
@@ -33,7 +34,6 @@
             </div>
             <br />
         </div>
-
 
         <p class="ul" onclick="Show(2)">Change Address</p>
         <div class="form-signin" id="addressForm" style="display:none;">

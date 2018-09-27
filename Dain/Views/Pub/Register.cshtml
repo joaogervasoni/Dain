@@ -7,11 +7,12 @@
 
 @using (Html.BeginForm("Register", "Pub", FormMethod.Post, new { @class = "form-signin", id = "registerForm", enctype = "multipart/form-data" }))
 {
+    @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
     <h1 class="h3 mb-3 font-weight-normal">Cadastro - Pub</h1>
     <br />
     <br />
 
-    
+
     @Html.HiddenFor(model => model.Email)
     @Html.HiddenFor(model => model.Login)
     @Html.HiddenFor(model => model.Password)

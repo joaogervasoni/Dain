@@ -34,26 +34,41 @@ namespace Dain.Controllers
         [HttpPost]
         public ActionResult Register(Pub newPub, HttpPostedFileBase upImage)
         {
-            // Verify the if the model is valid
-            if (ModelState.IsValid == false) return View(newPub);
+            if (ModelState.IsValid == true)
+            {
+                Tuple<double, double> tuple = GoogleGeoLocation.GetCoordinates(newPub.Address, newPub.State);
+                if (upImage == null)
+                {
+                    newPub.PhotoUrl = null;
+                    newPub.PhotoType = null;
+                }
+                else
+                {
+                    newPub.PhotoUrl = ImageHandler.HttpPostedFileBaseToByteArray(upImage);  
+                    newPub.PhotoType = upImage.ContentType;
+                }
 
-            // Get the coordinates of the bar location that the user has given
-            Tuple<double, double> tuple = GoogleGeoLocation.GetCoordinates(newPub.Address, newPub.State);
+                newPub.RegistrationDate = DateTime.Now;
+                newPub.Lat = tuple.Item1;
+                newPub.Lng = tuple.Item2;
 
-            // Set the remaining properties of the model
-            newPub.PhotoUrl = ImageHandler.HttpPostedFileBaseToByteArray(upImage);
-            newPub.PhotoType = upImage.ContentType;
-            newPub.RegistrationDate = DateTime.Now;
-            newPub.Lat = tuple.Item1;
-            newPub.Lng = tuple.Item2;
-
-            // Insert in the database, if successful
-            var returnedPub = PubDAO.Insert(newPub);
-            if (returnedPub == null) return View(newPub);
-            
-            // Generate a session with the user database id
-            UserSession.ReturnPubId(returnedPub.Id);
-            return RedirectToAction("Dashboard", "Pub");
+                var returnedPub = PubDAO.Insert(newPub);
+                if (returnedPub == null)
+                {
+                    ModelState.AddModelError("", "Error - Check information and try again");
+                    return View(newPub);
+                }
+                else
+                {
+                    UserSession.ReturnPubId(returnedPub.Id);
+                    return RedirectToAction("Dashboard", "Pub");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Error - Check information and try again");
+                return View(newPub);
+            }
         }
 
         #endregion
@@ -89,25 +104,6 @@ namespace Dain.Controllers
 
             ViewBag.Alter = "No";
             return View();
-
-        }
-
-        [HttpPost]
-        public Pub Geo(Pub pub)
-        {
-            string Address = pub.Address.Replace(" ", "+");
-            string url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + Address + "+" + pub.State + "&key=AIzaSyAq0VfrA_iDhSsQFW-wHlZ3X78rZ68GngI";
-            WebClient client = new WebClient();
-            string json = client.DownloadString(url);
-
-            byte[] bytes = Encoding.Default.GetBytes(json);
-            json = Encoding.UTF8.GetString(bytes);
-
-            JToken location = JObject.Parse(json)["results"][0]["geometry"]["location"];
-            pub.Lat = location["lat"].Value<double>();
-            pub.Lng = location["lng"].Value<double>();
-
-            return pub;
         }
 
         public ActionResult Dashboard()
@@ -136,7 +132,12 @@ namespace Dain.Controllers
                 UserSession.ClearPubSession();
                 return RedirectToAction("Login");
             }
-            else { return View("Account"); }
+            else
+            {
+                ViewBags();
+                ModelState.AddModelError("", "Error - Password does not match");
+                return View("Account", pub);
+            }
         }
 
         public ActionResult Update(Pub pubUpdate)
@@ -150,13 +151,21 @@ namespace Dain.Controllers
             pubUpdate.Login = pub.Login;
             pubUpdate.Id = pub.Id;
             if (pubUpdate.Password == null) { pubUpdate.Password = pub.Password; }
-            pubUpdate = Geo(pubUpdate);
+
+            Tuple<double, double> tuple = GoogleGeoLocation.GetCoordinates(pubUpdate.Address, pubUpdate.State);
+            pubUpdate.Lat = tuple.Item1;
+            pubUpdate.Lng = tuple.Item2;
 
             if (PubDAO.Update(pubUpdate) == true)
             {
                 return RedirectToAction("Dashboard");
             }
-            else { return View("Account"); }
+            else
+            {
+                ViewBags();
+                ModelState.AddModelError("", "Error - Check information and try again");
+                return View("Account", pub);
+            }
         }
 
         [HttpPost]
@@ -170,9 +179,13 @@ namespace Dain.Controllers
                 PubDAO.Update(pub);
 
                 return RedirectToAction("Account", "Pub");
-
-            } else { return View("Account"); }
-
+            }
+            else
+            {
+                ViewBags();
+                ModelState.AddModelError("", "Error - Image dont work");
+                return View("Account", pub);
+            }
         }
 
         public void ViewBags()

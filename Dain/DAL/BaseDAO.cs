@@ -10,11 +10,17 @@ namespace Dain.DAL
     public abstract class BaseDAO<T> where T : User
     {
         private static Context db = SingletonContext.GetInstance();
+
         public static T Insert(T entity)
         {
+            if (Search(entity.Email, entity.Password) == null)
+            {
                 var returnEntity = db.Set<T>().Add(entity);
                 db.SaveChanges();
                 return returnEntity;
+            }
+
+            return null;
         }
 
         public static bool Update(T entity)

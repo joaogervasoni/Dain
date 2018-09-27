@@ -28,8 +28,10 @@ namespace Dain.Controllers
                 ProductDAO.Insert(product);
                 return RedirectToAction("Product", "Pub");
             }
-
-            return RedirectToAction("Product", "Pub");
+            else
+            {
+                return RedirectToAction("Product", "Pub");
+            }
         }
 
         [HttpGet]
