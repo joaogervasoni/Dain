@@ -16,74 +16,67 @@ namespace Dain.Controllers
 {
     public class PubController : Controller
     {
-        #region Pub Registration
         
         public ActionResult Register()
         {
             // Get the user from the session that the User Controller generated with the basic data from the user
-            var user = (User)System.Web.HttpContext.Current.Session["pub"];
-            System.Web.HttpContext.Current.Session["pub"] = null;
+            var user = (User)System.Web.HttpContext.Current.Session["user"];
+            // System.Web.HttpContext.Current.Session["user"] = null;
 
             // If there is nothing in the user session, return to the user registration page
             if (user == null) return RedirectToAction("Register", "User");
 
             // Send user as a person model to the register pub view
-            return View(new Pub(user));
+            return View();
         }
-        
+
         [HttpPost]
         public ActionResult Register(Pub newPub, HttpPostedFileBase upImage)
         {
-            if (ModelState.IsValid == true)
-            {
-                Tuple<double, double> tuple = GoogleGeoLocation.GetCoordinates(newPub.Address, newPub.State);
-                if (upImage == null)
-                {
-                    newPub.PhotoUrl = null;
-                    newPub.PhotoType = null;
-                }
-                else
-                {
-                    newPub.PhotoUrl = ImageHandler.HttpPostedFileBaseToByteArray(upImage);  
-                    newPub.PhotoType = upImage.ContentType;
-                }
-
-                newPub.RegistrationDate = DateTime.Now;
-                newPub.Lat = tuple.Item1;
-                newPub.Lng = tuple.Item2;
-
-                var returnedPub = PubDAO.Insert(newPub);
-                if (returnedPub == null)
-                {
-                    ModelState.AddModelError("", "Error - Check information and try again");
-                    return View(newPub);
-                }
-                else
-                {
-                    UserSession.ReturnPubId(returnedPub.Id);
-                    return RedirectToAction("Dashboard", "Pub");
-                }
-            }
-            else
+            // Verify the if the model is valid
+            if (ModelState.IsValid == false)
             {
                 ModelState.AddModelError("", "Error - Check information and try again");
                 return View(newPub);
             }
-        }
 
-        #endregion
 
-        [HttpPost]
-        public ActionResult Login(string EmailLogin, string PasswordLogin)
-        {
-            var pub = PubDAO.Search(EmailLogin, PasswordLogin);
-            if (pub != null)
+            // Get the user from the session that the User Controller generated with the basic data from the user
+            var newUser = (User)System.Web.HttpContext.Current.Session["user"];
+
+            // If there is nothing in the user session, return to the user registration page
+            if (newUser == null) return RedirectToAction("Register", "User");
+
+            // Get the coordinates of the bar location that the user has given
+            Tuple<double, double> tuple = GoogleGeoLocation.GetCoordinates(newPub.Address, newPub.City, newPub.State);
+
+            // Set the remaining properties of the model
+            newPub.Lat = tuple.Item1;
+            newPub.Lng = tuple.Item2;
+            newPub.Photo = ImageHandler.HttpPostedFileBaseToByteArray(upImage);
+            newPub.PhotoType = upImage.ContentType;
+            newUser.RegistrationDate = DateTime.Now;
+            newUser.UserType = nameof(Pub);
+
+            // Insert in the database, if successful
+            var returnedUser = UserDAO.Insert(newUser);
+
+            newPub.UserId = returnedUser.Id;
+            var returnedPub = PubDAO.Insert(newPub);
+            if (returnedPub == null || returnedUser == null)
             {
-                UserSession.ReturnPubId(pub.Id);
-                return RedirectToAction("Dashboard", "Pub");
+                ModelState.AddModelError("", "Error - Check information and try again");
+                return View(newPub);
             }
-            return View("Login");
+
+            // Generate a session with the user database id
+            UserSession.ReturnPubId(returnedPub.Id);
+            UserSession.ReturnUserId(returnedPub.UserId);
+
+            System.Web.HttpContext.Current.Session["user"] = null;
+            return RedirectToAction("Account", "Pub");
         }
+        
 
         public ActionResult Product()
         {
@@ -108,85 +101,93 @@ namespace Dain.Controllers
 
         public ActionResult Dashboard()
         {
-            ViewBags();
             var pubSession = PubDAO.Search(UserSession.ReturnPubId(null));
-
             if (pubSession == null) RedirectToAction("Login", "User");
 
+            ViewBags();
             return View(pubSession);
         }
 
         public ActionResult Account()
         {
             var returnedPub = PubDAO.Search(UserSession.ReturnPubId(null));
+            if (returnedPub == null) RedirectToAction("Login", "User");
+
             ViewBags();
             return View(returnedPub);
         }
 
-        public ActionResult Delete(string Password)
+        public ActionResult Delete(string password)
         {
-            var pub = PubDAO.Search(UserSession.ReturnPubId(null));
-            if (Password == pub.Password)
+            var returnedPub = PubDAO.Search(UserSession.ReturnPubId(null));
+            var returnedUser = UserDAO.Search(returnedPub.UserId);
+
+            if (password != returnedUser.Password)
             {
-                PubDAO.Delete(pub);
-                UserSession.ClearPubSession();
-                return RedirectToAction("Login");
-            }
-            else
-            {
-                ViewBags();
                 ModelState.AddModelError("", "Error - Password does not match");
-                return View("Account", pub);
+                return View("Account");
             }
+
+            PubDAO.Delete(returnedPub);
+            UserDAO.Delete(returnedUser);
+            UserSession.ClearPubSession();
+            UserSession.ClearUserSession();
+
+            return RedirectToAction("Login", "User");
         }
 
         public ActionResult Update(Pub pubUpdate)
         {
-            var pub = PubDAO.Search(UserSession.ReturnPubId(null));
-            pubUpdate.Rating = pub.Rating;
-            pubUpdate.RegistrationDate = pub.RegistrationDate;
-            pubUpdate.UserType = pub.UserType;
-            pubUpdate.State = pub.State;
-            pubUpdate.PhotoUrl = pub.PhotoUrl;
-            pubUpdate.Login = pub.Login;
-            pubUpdate.Id = pub.Id;
-            if (pubUpdate.Password == null) { pubUpdate.Password = pub.Password; }
+            var returnedPub = PubDAO.Search(UserSession.ReturnPubId(null));
+            
 
-            Tuple<double, double> tuple = GoogleGeoLocation.GetCoordinates(pubUpdate.Address, pubUpdate.State);
-            pubUpdate.Lat = tuple.Item1;
-            pubUpdate.Lng = tuple.Item2;
+            // Set the remaining properties of the model
+            
+            returnedPub.Name = pubUpdate.Name ?? returnedPub.Name;
+            returnedPub.FoundationDate = pubUpdate.FoundationDate == null ? returnedPub.FoundationDate : pubUpdate.FoundationDate;
+            returnedPub.Address = pubUpdate.Address ?? returnedPub.Address;
+            returnedPub.City = pubUpdate.City ?? returnedPub.City;
+            returnedPub.State = pubUpdate.State ?? returnedPub.State;
 
-            if (PubDAO.Update(pubUpdate) == true)
+
+            // Get the coordinates of the bar location that the user has given
+            Tuple<double, double> tuple =
+                GoogleGeoLocation.GetCoordinates(returnedPub.Address, returnedPub.City, returnedPub.State);
+            returnedPub.Lat = tuple.Item1;
+            returnedPub.Lng = tuple.Item2;
+
+            if (PubDAO.Update(returnedPub) != true)
             {
-                return RedirectToAction("Dashboard");
-            }
-            else
-            {
-                ViewBags();
                 ModelState.AddModelError("", "Error - Check information and try again");
-                return View("Account", pub);
+                return View("Account");
             }
+
+            return RedirectToAction("Account");
         }
 
         [HttpPost]
-        public ActionResult UpdateImg(HttpPostedFileBase upImage)
+        public ActionResult UpdateProfile(HttpPostedFileBase upImage)
         {
-            var pub = PubDAO.Search(UserSession.ReturnPubId(null));
-            if (upImage != null)
+            if (upImage == null)
             {
-                pub.PhotoUrl = ImageHandler.HttpPostedFileBaseToByteArray(upImage);
-                pub.PhotoType = upImage.ContentType;
-                PubDAO.Update(pub);
-
-                return RedirectToAction("Account", "Pub");
-            }
-            else
-            {
-                ViewBags();
                 ModelState.AddModelError("", "Error - Image dont work");
-                return View("Account", pub);
+                return View("Account");
             }
+
+            var pub = PubDAO.Search(UserSession.ReturnPubId(null));
+
+            pub.Photo = ImageHandler.HttpPostedFileBaseToByteArray(upImage);
+            pub.PhotoType = upImage.ContentType;
+
+            if (PubDAO.Update(pub) != true)
+            {
+                ModelState.AddModelError("", "Error - Database update image error!");
+                return View("Account");
+            }
+            return RedirectToAction("Dashboard");
         }
+
+        #region Helpers
 
         public void ViewBags()
         {
@@ -195,7 +196,9 @@ namespace Dain.Controllers
             var pubsList = PubDAO.ReturnList().Select(x => new { x.Id, x.Name, x.Rating, x.Lat, x.Lng, x.Address, x.FoundationDate }).ToList();
             ViewBag.PubsList = JsonConvert.SerializeObject(pubsList);
             ViewBag.Name = pub.Name;
-            ViewBag.Profile = pub.PhotoBase64();
+            ViewBag.Profile = ImageHandler.PhotoBase64(pub.Photo, pub.PhotoType);
         }
+
+        #endregion
     }
 }

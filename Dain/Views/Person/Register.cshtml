@@ -1,9 +1,12 @@
 ﻿
+@using Dain.Utils;
+
 @model Dain.Models.Person
 
 @{
     Layout = "~/Views/Shared/_Layout-Login.cshtml";
     ViewBag.Title = "Login - Person";
+    ViewBag.Profile = ViewBag.Profile;
 }
 
 @using (Html.BeginForm("Register", "Person", FormMethod.Post, new { @class = "form-signin", id = "registerForm", enctype = "multipart/form-data" }))
@@ -11,15 +14,13 @@
     <h1 class="h3 mb-3 font-weight-normal">Cadastro - Person</h1>
     <br />
     <br />
+
     <div id="wrapper">
-        @if (Model != null && !String.IsNullOrEmpty(Model.PhotoBase64()))
-        {
-            <img src="@Model.PhotoBase64()" id="output_image" class="rounded mx-auto d-block">
-        }
+        @if (Model != null && !String.IsNullOrEmpty(ViewBag.Profile))
+        {<img src="@ViewBag.Profile" id="output_image" class="rounded mx-auto d-block"> }
         else
-        {
-            <img src="~/Content/Preview.png" id="output_image" class="rounded mx-auto d-block">
-        }
+        { <img src="~/Content/Preview.png" id="output_image" class="rounded mx-auto d-block">}
+
         <br />
         <div class="custom-file">
             <input type="file" accept="image/*" onchange="Preview_image(event)" class="custom-file-input" name="upImage" id="upImage">

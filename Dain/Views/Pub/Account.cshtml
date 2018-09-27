@@ -1,9 +1,13 @@
 ﻿@using Dain.Models
+@using Dain.Utils;
+@using Dain.DAL;
+
 @model Pub
 
 @{
     ViewBag.Title = "Dashboard - Account";
     Layout = "~/Views/Shared/_Layout-Dashboard-Pub.cshtml";
+    ViewBag.User = UserDAO.Search(UserSession.ReturnUserId(null));
     ViewBag.Profile = ViewBag.Profile;
 }
 
@@ -35,6 +39,7 @@
             <br />
         </div>
 
+
         <p class="ul" onclick="Show(2)">Change Address</p>
         <div class="form-signin" id="addressForm" style="display:none;">
             <div class="card text-center col-md-4">
@@ -58,41 +63,9 @@
             </div>
             <br />
         </div>
-
-
-        <p class="ul" onclick="Show(3)">Change Pass</p>
-        <div class="form-signin" id="passForm" style="display:none;">
-
-            <div class="card text-center col-md-4">
-                <div class="card-body">
-                    @Html.LabelFor(model => model.Password)
-                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "Password" })
-                    <br />
-
-                    <button class="btn btn-outline-dark" type="submit">Change</button>
-                </div>
-            </div>
-            <br />
-        </div>
-
-
-        <p class="ul" onclick="Show(4)">Change Email</p>
-        <div class="form-signin" id="emailForm" style="display:none;">
-            <div class="card text-center col-md-4">
-                <div class="card-body">
-                    @Html.LabelFor(model => model.Email)
-                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Email" } })
-                    <br />
-
-                    <button class="btn btn-outline-dark" type="submit">Change</button>
-                </div>
-            </div>
-            <br />
-        </div>
-
-        @*<p class="ul">Layout Color</p>*@
-
     }
+
+    @{Html.RenderPartial("UserUpdate", (User)ViewBag.User); }
 </div>
 
 <br />
@@ -104,14 +77,12 @@
 
         <div class="card text-center col-md-4">
             <div id="card-body">
-                @using (Html.BeginForm("UpdateImg", "Pub", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                @using (Html.BeginForm("UpdateProfile", "Pub", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
-                    if (Model != null && !String.IsNullOrEmpty(Model.PhotoBase64()))
-                    {
-                        <img src="@Model.PhotoBase64()" id="output_image" class="rounded mx-auto d-block img-fluid" style="max-height: 180px; width: auto;">
-                    }
+                    if (Model != null && !String.IsNullOrEmpty(ViewBag.Profile))
+                    {<img src="@ViewBag.Profile" id="output_image" class="rounded mx-auto d-block"> }
                     else
-                    { <img src="~/Content/Preview.png" id="output_image" class="rounded mx-auto d-block img-fluid" style="max-height: 180px; width: auto;">}
+                    { <img src="~/Content/Preview.png" id="output_image" class="rounded mx-auto d-block">}
 
                     <br />
                     <div class="custom-file">

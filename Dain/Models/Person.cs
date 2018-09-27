@@ -6,24 +6,20 @@ namespace Dain.Models
     /// <summary>
     /// The data model of the person type users that will access the system
     /// </summary>
-    public class Person : User
+    public class Person
     {
-        
-        public Person() {}
+        #region Public Properties
 
-        public Person(User user) : base(user) {}
+        [Key]
+        /// <summary>
+        /// The person ID
+        /// </summary>
+        public int Id { get; set; }
 
-        public Person(User user, Person person) : base(user)
-        {
-            Name = person.Name;
-            Address = person.Address;
-            City = person.City;
-            State = person.State;
-            Birthday = person.Birthday;
-            PhotoUrl = person.PhotoUrl;
-            Gender = person.Gender;
-            UserType = nameof(Person);
-        }
+        /// <summary>
+        /// The user ID
+        /// </summary>
+        public int UserId { get; set; }
 
         /// <summary>
         /// The name of the person
@@ -33,7 +29,7 @@ namespace Dain.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// The address that the person lives
+        /// The address where the person lives
         /// </summary>
         [Required]
         [Display(Name = "Address")]
@@ -47,10 +43,20 @@ namespace Dain.Models
         public string City { get; set; }
 
         /// <summary>
-        /// The state that the person lives
+        /// The state where the person lives
         /// </summary>
         [Display(Name = "State")]
         public string State { get; set; }
+
+        /// <summary>
+        /// Latitude of the person house in the map
+        /// </summary>
+        public double Lat { get; set; }
+
+        /// <summary>
+        /// Longitude of the person house in the map
+        /// </summary>
+        public double Lng { get; set; }
 
         /// <summary>
         /// The date that the person was born
@@ -58,15 +64,18 @@ namespace Dain.Models
         [Required]
         [Display(Name = "Birthday Date")]
         [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Birthday { get; set; }
 
         /// <summary>
         /// The person photo
         /// </summary>
-        public byte[] PhotoUrl { get; set; }
+        public byte[] Photo { get; set; }
 
+        /// <summary>
+        /// The type of the photo to add to the reponse headers to be send to the browser
+        /// </summary>
         public string PhotoType { get; set; }
-        
 
         /// <summary>
         /// The gender of the person
@@ -74,11 +83,6 @@ namespace Dain.Models
         [Display(Name = "Gender")]
         public string Gender { get; set; }
 
-        public string PhotoBase64()
-        {
-            if (PhotoUrl != null) return string.Format($"data:{PhotoType};base64,{Convert.ToBase64String(PhotoUrl)}");
-            return null;
-
-        }
+        #endregion
     }
 }

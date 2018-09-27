@@ -10,13 +10,13 @@ namespace Dain.Controllers
 {
     public static class GoogleGeoLocation
     {
-        public static Tuple<double, double> GetCoordinates(string address, string state)
+        public static Tuple<double, double> GetCoordinates(string address, string city, string state)
         {
             address = address.Replace(" ", "+");
             state = state.Replace(" ", "+");
-            
+
             string url = "https://maps.googleapis.com/maps/api/geocode/json?address="
-                         + address + "+" + state 
+                         + address + "+" + city + "+" + state
                          + "&key=AIzaSyAq0VfrA_iDhSsQFW-wHlZ3X78rZ68GngI";
 
             WebClient client = new WebClient();

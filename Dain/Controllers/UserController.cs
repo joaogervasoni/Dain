@@ -13,7 +13,6 @@ namespace Dain.Controllers
     {
         #region User Login
 
-        // GET: User
         public ActionResult Login()
         {
             return View();
@@ -22,17 +21,25 @@ namespace Dain.Controllers
         [HttpPost]
         public ActionResult Login(User user)
         {
-            var pub = PubDAO.Search(user.Email, user.Password);
-            var person = PersonDAO.Search(user.Email, user.Password);
+            var returnedUser = UserDAO.SearchByEmailPassword(user.Email, user.Password);
+            if (returnedUser == null) return View(user);
 
-            if (pub != null)
+            if (returnedUser.UserType.Equals(nameof(Pub)))
             {
+                var pub = PubDAO.SearchByUserId(returnedUser.Id);
+
                 UserSession.ReturnPubId(pub.Id);
+                UserSession.ReturnUserId(pub.UserId);
+
                 return RedirectToAction("Dashboard", "Pub");
             }
-            else if(person != null)
+            else if (returnedUser.UserType.Equals(nameof(Person)))
             {
-                UserSession.ReturnPubId(person.Id);
+                var person = PersonDAO.SearchByUserId(returnedUser.Id);
+
+                UserSession.ReturnPersonId(person.Id);
+                UserSession.ReturnUserId(person.UserId);
+
                 return RedirectToAction("Dashboard", "Person");
             }
 
@@ -51,18 +58,34 @@ namespace Dain.Controllers
         [HttpPost]
         public ActionResult Register(User user, string button)
         {
+            System.Web.HttpContext.Current.Session["user"] = null;
+            System.Web.HttpContext.Current.Session["user"] = user;
+
+            var returnedUser = UserDAO.SearchByEmailLogin(user.Email, user.Login);
+            if (returnedUser != null) return View(user);
+
             switch (button)
             {
-                case "PubType":
-                    System.Web.HttpContext.Current.Session["pub"] = user;
-                    return RedirectToAction("Register", "Pub");
+                case "PubType": return RedirectToAction("Register", "Pub");
 
-                case "PersonType":
-                    System.Web.HttpContext.Current.Session["person"] = user;
-                    return RedirectToAction ("Register", "Person");
+                case "PersonType": return RedirectToAction("Register", "Person");
 
                 default: return View(user);
             }
+        }
+
+        public ActionResult Update(User userUpdate)
+        {
+            var user = UserDAO.Search(UserSession.ReturnUserId(null));
+            user.Email = userUpdate.Email;
+
+            if (!string.IsNullOrEmpty(userUpdate.Password))
+                user.Password = userUpdate.Password;
+
+            if (UserDAO.Update(user) == true)
+                return RedirectToAction("Dashboard", user.UserType);
+
+            return RedirectToAction("Account", user.UserType);
         }
 
         #endregion

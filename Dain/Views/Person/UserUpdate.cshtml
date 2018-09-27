@@ -1,0 +1,33 @@
+﻿@model Dain.Models.User
+
+@using (Html.BeginForm("Update", "User", FormMethod.Post))
+{
+    <p class="ul" onclick="Show(3)">Change Pass</p>
+    <div class="form-signin" id="passForm" style="display:none;">
+
+        <div class="card text-center col-md-4">
+            <div class="card-body">
+                @Html.LabelFor(model => model.Password)
+                @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "Password" })
+                <br />
+
+                <button class="btn btn-outline-dark" type="submit">Change</button>
+            </div>
+        </div>
+        <br />
+    </div>
+
+    <p class="ul" onclick="Show(4)">Change Email</p>
+    <div class="form-signin" id="emailForm" style="display:none;">
+        <div class="card text-center col-md-4">
+            <div class="card-body">
+                @Html.LabelFor(model => model.Email)
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Email" } })
+                <br />
+
+                <button class="btn btn-outline-dark" type="submit">Change</button>
+            </div>
+        </div>
+        <br />
+    </div>
+}

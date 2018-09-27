@@ -8,14 +8,26 @@ namespace Dain.Utils
 {
     public class UserSession
     {
+        #region Get Session Methods
+
+        public static int ReturnUserId(int? id)
+        {
+            if (HttpContext.Current.Session["UserID"] == null)
+            {
+                HttpContext.Current.Session["UserID"] = (id);
+            }
+            try { return int.Parse(HttpContext.Current.Session["UserID"].ToString()); }
+            catch { return -1; }
+        }
+
         public static int ReturnPubId(int? id)
         {
             if (HttpContext.Current.Session["PubID"] == null)
             {
                 HttpContext.Current.Session["PubID"] = (id);
             }
-
-            return int.Parse(HttpContext.Current.Session["PubID"].ToString());
+            try { return int.Parse(HttpContext.Current.Session["PubID"].ToString()); }
+            catch { return -1; }
         }
 
         public static int ReturnPersonId(int? id)
@@ -25,18 +37,30 @@ namespace Dain.Utils
                 HttpContext.Current.Session["PersonID"] = (id);
             }
 
-            return int.Parse(HttpContext.Current.Session["PersonID"].ToString());
+            try { return int.Parse(HttpContext.Current.Session["PersonID"].ToString()); }
+            catch { return -1; }
+        }
+
+        #endregion
+
+        #region Clear Session Methods
+
+        public static void ClearUserSession()
+        {
+            HttpContext.Current.Session["UserID"] = null;
         }
 
         public static void ClearPubSession()
         {
-            HttpContext.Current.Session["UserID"] = null;
+            HttpContext.Current.Session["PubID"] = null;
         }
 
         public static void ClearPersonSession()
         {
             HttpContext.Current.Session["PersonID"] = null;
         }
-        
+
+        #endregion
+
     }
 }

@@ -1,8 +1,15 @@
-﻿@{
+﻿@using Dain.Models
+@using Dain.Utils;
+@using Dain.DAL;
+
+@model Person
+
+@{
     ViewBag.Title = "Dashboard - Account";
-    ViewBag.Name = "João";
-    ViewBag.Image = "/Content/Preview.png";
+    ViewBag.Name = ViewBag.Name;
     Layout = "~/Views/Shared/_Layout-Dashboard-Person.cshtml";
+    ViewBag.User = UserDAO.Search(UserSession.ReturnUserId(null));
+    ViewBag.Profile = ViewBag.Profile;
 }
 
 <div class="line">
@@ -11,69 +18,54 @@
 
 <div class="line-np">
 
-    <p class="ul" onclick="Show(1)">Change Name, Birth date</p>
-    <form class="form-signin" id="nameForm" name="nameForm" style="display:none;">
-        <div class="card text-center col-md-4">
-            <div class="card-body">
-                <label for="registerName">Name</label>
-                <input type="text" id="registerName" class="form-control" placeholder="Name" required autofocus style=""><br />
+    <p class="ul" onclick="Show(1)">Change Name, Birthday</p>
+    @using (Html.BeginForm("Update", "Person", FormMethod.Post))
+    {
+        <div class="form-signin" id="nameForm" style="display:none;">
+            <div class="card text-center col-md-4">
+                <div class="card-body">
 
-                <label for="registerBirth">Birth</label>
-                <input type="date" id="registerBirth" placeholder="Birth" class="form-control" required /><br />
+                    @Html.LabelFor(model => model.Name)
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Name" } })
+                    <br />
 
-                <button class="btn btn-outline-dark" type="submit">Change</button>
+                    @Html.LabelFor(model => model.Birthday)
+                    @Html.EditorFor(model => model.Birthday, new { htmlAttributes = new { @class = "form-control", @type = "date", placeholder = "Birthday" } })
+                    <br />
+
+                    <button class="btn btn-outline-dark" type="submit">Change</button>
+                </div>
             </div>
+            <br />
         </div>
-        <br />
-    </form>
 
-    <p class="ul" onclick="Show(2)">Change Address</p>
 
-    <form class="form-signin" id="addressForm" name="addressForm" style="display:none;">
-        <div class="card text-center col-md-4">
-            <div class="card-body">
-                <label for="registerAddress">Address</label>
-                <input type="text" id="registerAddress" class="form-control" placeholder="Address" required autofocus style=""><br />
+        <p class="ul" onclick="Show(2)">Change Address</p>
+        <div class="form-signin" id="addressForm" style="display:none;">
+            <div class="card text-center col-md-4">
+                <div class="card-body">
+                    @Html.LabelFor(model => model.Address)
+                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", placeholder = "Address" } })
+                    <br />
 
-                <label for="registerState">State</label>
-                <select class="form-control">
-                    <option>Paraná</option>
-                </select><br />
+                    <label for="state">State</label>
+                    <select name="state" class="form-control">
+                        <option>Paraná</option>
+                    </select>
+                    <br />
 
-                <label for="registerCity">City</label>
-                <input type="text" id="registerCity" class="form-control" placeholder="City" required autofocus style=""><br />
+                    @Html.LabelFor(model => model.City)
+                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", placeholder = "City" } })
+                    <br />
 
-                <button class="btn btn-outline-dark" type="submit">Change</button>
+                    <button class="btn btn-outline-dark" type="submit">Change</button>
+                </div>
             </div>
+            <br />
         </div>
-        <br />
-    </form>
+    }
 
-    <p class="ul" onclick="Show(3)">Change Pass</p>
-    <form class="form-signin" id="passForm" name="passForm" style="display:none;">
-        <div class="card text-center col-md-4">
-            <div class="card-body">
-                <label for="registerPassword" class="sr-only">Password</label>
-                <input type="password" id="registerPassword" class="form-control" placeholder="Password" required autofocus style=""><br />
-                <button class="btn btn-outline-dark" type="submit">Change</button>
-            </div>
-        </div>
-        <br />
-    </form>
-
-    <p class="ul" onclick="Show(4)">Change Email</p>
-    <form class="form-signin" id="emailForm" name="emailForm" style="display:none;">
-        <div class="card text-center col-md-4">
-            <div class="card-body">
-                <label for="registerEmail" class="sr-only">Email</label>
-                <input type="email" id="registerEmail" class="form-control" placeholder="Email" required autofocus style=""><br />
-                <button class="btn btn-outline-dark" type="submit">Change</button>
-            </div>
-        </div>
-        <br />
-    </form>
-
-    @*<p class="ul">Layout Color</p>*@
+    @{Html.RenderPartial("UserUpdate", (User)ViewBag.User); }
 </div>
 
 <br />
@@ -84,14 +76,22 @@
     <div class="form-signin" id="imgForm" style="display:initial;">
         <div class="card text-center col-md-4">
             <div class="card-body">
-                @using (Html.BeginForm("UpdateImg", "Person", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                @using (Html.BeginForm("UpdatePhoto", "Person", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
-                    <img src="@ViewBag.Image" id="output_image" class="rounded mx-auto d-block img-fluid" style="max-height: 180px; width: auto;" />
-                    <br />
+                    <div id="wrapper">
+                        @if (Model != null && !String.IsNullOrEmpty(ViewBag.Profile))
+                        {<img src="@ViewBag.Profile" id="output_image" class="rounded mx-auto d-block"> }
+                        else
+                        { <img src="~/Content/Preview.png" id="output_image" class="rounded mx-auto d-block">}
 
-                    <input type="file" accept="image/*" onchange="Preview_image(event)" class="form-control" name="upImage" id="upImage">
-                    <br />
-                    <button class="btn btn-outline-dark" type="submit">Change</button>
+                        <br />
+                        <div class="custom-file">
+                            <input type="file" accept="image/*" onchange="Preview_image(event)" class="custom-file-input" name="upImage" id="upImage">
+                            <label class="custom-file-label" id="label_image" for="upImage">Choose Photo</label>
+                        </div>
+                        <br />
+                        <button class="btn btn-outline-dark" type="submit">Change</button>
+                    </div>
                 }
             </div>
         </div>
@@ -120,11 +120,13 @@
         <div class="card-body text-danger">
             <h5 class="card-title">Delete Account</h5>
             <p class="card-text">Enter your password and click delete</p>
-            <form class="form-signin" id="deleteForm" name="deleteForm">
+            @using (Html.BeginForm("Delete", "Person", FormMethod.Post, new { @class = "form-signin", id = "deleteForm" }))
+            {
                 <label for="deletePassword" class="sr-only">Password</label>
-                <input type="password" id="deletePassword" class="form-control border-danger col-md-6" placeholder="Password" required autofocus style=""><br />
+                @Html.Password("Password", null, new { @class = "form-control border-danger col-md-6", id = "deletePassword", required = "true", placehold = "Password" });
+                <br />
                 <button class="btn btn-outline-danger" type="submit">Delete</button><br />
-            </form>
+            }
         </div>
     </div>
 </div>

@@ -132,17 +132,10 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="DAL\CategoryDAO.cs" />
-    <Compile Include="Migrations\201809262108171_Cat_Domination.cs" />
-    <Compile Include="Migrations\201809262108171_Cat_Domination.Designer.cs">
-      <DependentUpon>201809262108171_Cat_Domination.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201809262109234_C.cs" />
-    <Compile Include="Migrations\201809262109234_C.Designer.cs">
-      <DependentUpon>201809262109234_C.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201809262110030_Cc.cs" />
-    <Compile Include="Migrations\201809262110030_Cc.Designer.cs">
-      <DependentUpon>201809262110030_Cc.cs</DependentUpon>
+    <Compile Include="DAL\UserDAO.cs" />
+    <Compile Include="Migrations\201809271321240_FirstMigration.cs" />
+    <Compile Include="Migrations\201809271321240_FirstMigration.Designer.cs">
+      <DependentUpon>201809271321240_FirstMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
@@ -151,11 +144,11 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\PubController.cs" />
     <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="DAL\BaseDAO.cs" />
+    <Compile Include="DAL\Base\BaseDAO.cs" />
     <Compile Include="DAL\PersonDAO.cs" />
     <Compile Include="DAL\ProductDAO.cs" />
     <Compile Include="DAL\PubDAO.cs" />
-    <Compile Include="DAL\SingletonContext.cs" />
+    <Compile Include="DAL\Base\SingletonContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -194,6 +187,8 @@
     <Content Include="Views\User\Register.cshtml" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+    <Content Include="Views\Person\UserUpdate.cshtml" />
+    <Content Include="Views\Pub\UserUpdate.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -206,14 +201,8 @@
     <Folder Include="Views\Product\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201809262108171_Cat_Domination.resx">
-      <DependentUpon>201809262108171_Cat_Domination.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201809262109234_C.resx">
-      <DependentUpon>201809262109234_C.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201809262110030_Cc.resx">
-      <DependentUpon>201809262110030_Cc.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201809271321240_FirstMigration.resx">
+      <DependentUpon>201809271321240_FirstMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

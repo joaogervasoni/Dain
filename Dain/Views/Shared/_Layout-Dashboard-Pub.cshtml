@@ -39,11 +39,10 @@
                         <li class="nav-item" align="center">
                             <div class="profileimage img-thumbnail" style="margin:auto;">
                                 <a href="@Url.Action("Account", "Pub", null)">
-                                    @if (ViewBag.Profile != null)
-                                    {
-                                        <img src="@ViewBag.Profile">
-                                    }
-                                    else { <img src="~/Content/Preview.png"> }
+                                    @if (!String.IsNullOrEmpty(ViewBag.Profile))
+                                    {<img src="@ViewBag.Profile"> }
+                                    else
+                                    { <img src="~/Content/Preview.png">}
                                 </a>
                             </div>
                         </li>
@@ -69,7 +68,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">
                                 <span data-feather="users"></span>
-                                Category
+                                Customers
                             </a>
                         </li>
                         <li class="nav-item">
