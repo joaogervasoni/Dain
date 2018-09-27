@@ -1,0 +1,51 @@
+﻿@using Dain.Models
+@model Pub
+
+@{
+    List<Product> Products = ViewBag.ProductList;
+    ViewBag.Title = "Dashboard - Pub";
+    Layout = "~/Views/Shared/_Layout-Dashboard-Person.cshtml";
+    ViewBag.PubsList = ViewBag.PubsList;
+    ViewBag.Profile = ViewBag.Profile;
+    ViewBag.LayoutStyle = @ViewBag.LayoutStyle;
+}
+
+<section class="jumbotron text-center container">
+    <div class="container">
+        <img class="card-img-top img-thumbnail" style="max-height: 40%; width: 200px; display: inline;" src="@Model.PhotoBase64()" data-holder-rendered="true">
+        <h1 class="jumbotron-heading custom-font", sans-serif;">@Model.Name</h1>
+        <h4 class="jumbotron-heading custom-font", sans-serif;">Rating: @Model.Rating</h4>
+        <h4 class="jumbotron-heading custom-font", sans-serif;">Address: @Model.Address</h4>
+    </div>
+</section>
+
+<div class="album py-5 bg-light">
+    <div class="container">
+        <h3 class="custom-font">Products</h3>
+        <div class="row">
+            @foreach (Product product in Products)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <img class="card-img-top" alt="Thumbnail" style="height: 225px; width: 100%; display: block;" src="@product.PhotoBase64()" data-holder-rendered="true">
+                        <div class="card-body">
+                            <p class="card-text"><b>Name: </b>@product.Name</p>
+                            <p class="card-text"><b>Price: </b>R$: @product.Price</p>
+                            <p class="card-text"><b>Decription: </b>@product.Description</p>
+                            @if (@product.Category == null)
+                            {
+                                <p class="card-text"><b>Category: </b>None</p>
+                            }
+                            else
+                            {
+                                <p class="card-text"><b>Category: </b>@product.Category</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+

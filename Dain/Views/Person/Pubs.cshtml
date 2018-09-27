@@ -1,0 +1,39 @@
+﻿@using Dain.Models
+@model List<Pub>
+
+@{
+    ViewBag.Title = "Dashboard - Pubs";
+    Layout = "~/Views/Shared/_Layout-Dashboard-Person.cshtml";
+    ViewBag.Profile = ViewBag.Profile;
+    ViewBag.LayoutStyle = @ViewBag.LayoutStyle;
+}
+
+<div class="album py-5 bg-light">
+    <div class="container">
+        <h3 class="custom-font">Pubs:</h3>
+        <div class="row">
+            @foreach (Pub pubs in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <img class="card-img-top" alt="Thumbnail" style="height: 225px; width: 100%; display: block;" src="@pubs.PhotoBase64()" data-holder-rendered="true">
+                        <div class="card-body">
+                            <p class="card-text"><b>Name: </b>@pubs.Name</p>
+                            <p class="card-text"><b>Address: </b>@pubs.Address</p>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    @Html.ActionLink("View", "Pub", "Person", new { id = pubs.Id }, new { @class = "btn btn-sm btn-outline-secondary" })
+                                    @*<button type="button" class="btn btn-sm btn-outline-secondary">View</button>*@
+                                    @*<button type="button" class="btn btn-sm btn-outline-secondary">Share</button>*@
+                                </div>
+                                <small class="text-muted">Rate: <b>@pubs.Rating</b></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

@@ -53,6 +53,10 @@ body {
     display: inline-block;
 }
 
+.custom-font {
+    font-family: 'Raleway', sans-serif;
+}
+
 /*
  * Sidebar
  */

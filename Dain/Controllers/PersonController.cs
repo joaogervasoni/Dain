@@ -121,7 +121,7 @@ namespace Dain.Controllers
             return View("Account");
         }
 
-        public ActionResult UpdateLayout(int id)
+        public ActionResult UpdateLayout(string layout)
         {
             var update = PersonDAO.SearchByUserId(UserSession.ReturnUserId(null));
             update.LayoutStyle = layout;
@@ -142,6 +142,22 @@ namespace Dain.Controllers
 
             if (PersonDAO.Update(returnedPerson) != true) return View("Account");
             return RedirectToAction("Account");
+        }
+
+        public ActionResult Pubs()
+        {
+            ViewBags();
+            return View(PubDAO.ReturnList());
+        }
+
+        public ActionResult Pub(int id)
+        {
+            var pub = PubDAO.Search(id);
+            ViewBag.ProductList = ProductDAO.ReturnList(pub.Id);
+            ViewBag.Categories = new MultiSelectList(CategoryDAO.ReturnList(), "Id", "Name");
+
+            ViewBags();
+            return View(pub);
         }
 
         #region Helpers

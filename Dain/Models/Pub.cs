@@ -88,5 +88,12 @@ namespace Dain.Models
         public string LayoutStyle { get; set; }
 
         #endregion
+
+        public string PhotoBase64()
+        {
+            if (Photo == null || string.IsNullOrEmpty(PhotoType)) return null;
+
+            return string.Format($"data:{PhotoType};base64,{Convert.ToBase64String(Photo)}");
+        }
     }
 }
