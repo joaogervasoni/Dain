@@ -208,6 +208,7 @@ namespace Dain.Controllers
             ViewBag.Name = pub.Name;
             ViewBag.Profile = ImageHandler.PhotoBase64(pub.Photo, pub.PhotoType);
             ViewBag.LayoutStyle = pub.LayoutStyle;
+            ViewBag.Type = "pub";
         }
 
         #endregion

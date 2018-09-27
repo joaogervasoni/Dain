@@ -3,14 +3,13 @@
 
 @{
     ViewBag.Title = "Dashboard - Pubs";
-    Layout = "~/Views/Shared/_Layout-Dashboard-Person.cshtml";
+    Layout = "~/Views/Shared/_Layout-Dashboard.cshtml";
     ViewBag.Profile = ViewBag.Profile;
-    ViewBag.LayoutStyle = @ViewBag.LayoutStyle;
 }
 
 <div class="album py-5 bg-light">
     <div class="container">
-        <h3 class="custom-font">Pubs:</h3>
+        <h3 class="custom-font"><b>Pubs:</b></h3>
         <div class="row">
             @foreach (Pub pubs in Model)
             {

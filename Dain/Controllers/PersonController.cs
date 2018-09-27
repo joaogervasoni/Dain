@@ -174,6 +174,7 @@ namespace Dain.Controllers
             ViewBag.Lat = tuple == null ? -25.441105 : tuple.Item1;
             ViewBag.PubsList = JsonConvert.SerializeObject(pubsList);
             ViewBag.LayoutStyle = personSession.LayoutStyle;
+            ViewBag.Type = "person";
         }
 
         #endregion

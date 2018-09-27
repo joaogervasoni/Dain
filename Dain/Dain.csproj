@@ -179,13 +179,11 @@
     <Content Include="Content\bootstrap.min.css.map" />
     <None Include="packages.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\_Layout-Dashboard-Pub.cshtml" />
     <Content Include="Views\Pub\Register.cshtml" />
     <Content Include="Views\Person\Register.cshtml" />
     <Content Include="Views\Shared\_Layout-Login.cshtml" />
     <Content Include="Views\Pub\Dashboard.cshtml" />
     <Content Include="Views\Person\Dashboard.cshtml" />
-    <Content Include="Views\Shared\_Layout-Dashboard-Person.cshtml" />
     <Content Include="Views\Pub\Account.cshtml" />
     <Content Include="Views\Person\Account.cshtml" />
     <Content Include="Views\Pub\Product.cshtml" />
@@ -199,6 +197,7 @@
     <Content Include="Views\Pub\UserUpdate.cshtml" />
     <Content Include="Views\Person\Pubs.cshtml" />
     <Content Include="Views\Person\Pub.cshtml" />
+    <Content Include="Views\Shared\_Layout-Dashboard.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

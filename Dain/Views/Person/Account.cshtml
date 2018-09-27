@@ -7,10 +7,9 @@
 @{
     ViewBag.Title = "Dashboard - Account";
     ViewBag.Name = ViewBag.Name;
-    Layout = "~/Views/Shared/_Layout-Dashboard-Person.cshtml";
+    Layout = "~/Views/Shared/_Layout-Dashboard.cshtml";
     ViewBag.User = UserDAO.Search(UserSession.ReturnUserId(null));
     ViewBag.Profile = ViewBag.Profile;
-    ViewBag.LayoutStyle = @ViewBag.LayoutStyle;
 }
 
 <div class="line">
