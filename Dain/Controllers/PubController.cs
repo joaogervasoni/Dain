@@ -11,6 +11,7 @@ using System.Text;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using Newtonsoft.Json;
+using System.Web.Security;
 
 namespace Dain.Controllers
 {
@@ -58,8 +59,8 @@ namespace Dain.Controllers
             newPub.LayoutStyle = "dark";
             newUser.RegistrationDate = DateTime.Now;
             newUser.UserType = nameof(Pub);
-
-
+            newUser.Password = CryptSharp.Crypter.MD5.Crypt(newUser.Password);
+            
             // Insert in the database, if successful
             var returnedUser = UserDAO.Insert(newUser);
 

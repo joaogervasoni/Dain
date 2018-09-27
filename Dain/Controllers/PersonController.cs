@@ -50,6 +50,7 @@ namespace Dain.Controllers
 
             newUser.RegistrationDate = DateTime.Now;
             newUser.UserType = nameof(Person);
+            newUser.Password = CryptSharp.Crypter.MD5.Crypt(newUser.Password);
 
             // Insert in the database, if successful
             var returnedUser = UserDAO.Insert(newUser);

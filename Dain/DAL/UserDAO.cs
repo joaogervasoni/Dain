@@ -10,13 +10,23 @@ namespace Dain.DAL
     {
         public static User SearchByEmailPassword(string email, string password)
         {
-            try { return db.Set<User>().FirstOrDefault(x => x.Email.Equals(email) && x.Password.Equals(password)); }
+           
+            try {
+                var user = db.Set<User>().FirstOrDefault(x => x.Email.Equals(email));
+
+                if (CryptSharp.Crypter.CheckPassword(password, user.Password) == true)
+                {
+                    return user;
+                }
+
+                return null;
+            }
             catch { return null; }
         }
 
-        public static User SearchByEmailLogin(string email, string login)
+        public static User SearchByEmailLogin(string email)
         {
-            try { return db.Set<User>().FirstOrDefault(x => x.Email.Equals(email) && x.Login.Equals(login)); }
+            try { return db.Set<User>().FirstOrDefault(x => x.Email.Equals(email)); }
             catch { return null; }
         }
     }

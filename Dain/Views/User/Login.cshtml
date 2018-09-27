@@ -8,6 +8,7 @@
 
 @using (Html.BeginForm("Login", "User", FormMethod.Post, new { @class = "form-signin", id = "loginForm" }))
 {
+    @Html.AntiForgeryToken()
     <fieldset>
 
         <img class="mb-4" src="~/Content/Dain-Logo.png" alt="" width="150" height="185">

@@ -61,8 +61,12 @@ namespace Dain.Controllers
             System.Web.HttpContext.Current.Session["user"] = null;
             System.Web.HttpContext.Current.Session["user"] = user;
 
-            var returnedUser = UserDAO.SearchByEmailLogin(user.Email, user.Login);
-            if (returnedUser != null) return View(user);
+            var returnedUser = UserDAO.SearchByEmailLogin(user.Email);
+            if (returnedUser != null)
+            {
+                ModelState.AddModelError("", "Error - Email already exist");
+                return View(user);
+            }
 
             switch (button)
             {
