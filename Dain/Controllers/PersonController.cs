@@ -121,6 +121,14 @@ namespace Dain.Controllers
             return View("Account");
         }
 
+        public ActionResult UpdateLayout(int id)
+        {
+            var update = PersonDAO.SearchByUserId(UserSession.ReturnUserId(null));
+            update.LayoutStyle = layout;
+            Update(update);
+            return RedirectToAction("Account");
+        }
+
         [HttpPost]
         public ActionResult UpdatePhoto(HttpPostedFileBase upImage)
         {
@@ -149,6 +157,7 @@ namespace Dain.Controllers
             ViewBag.Lon = tuple == null ? -49.276855 : tuple.Item2;
             ViewBag.Lat = tuple == null ? -25.441105 : tuple.Item1;
             ViewBag.PubsList = JsonConvert.SerializeObject(pubsList);
+            ViewBag.LayoutStyle = personSession.LayoutStyle;
         }
 
         #endregion

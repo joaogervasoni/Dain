@@ -47,6 +47,8 @@ namespace Dain.Models
         /// </summary>
         public DateTime RegistrationDate { get; set; }
 
+
+
         #endregion
     }
 }

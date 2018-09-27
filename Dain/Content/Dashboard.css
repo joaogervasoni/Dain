@@ -45,6 +45,14 @@ body {
   vertical-align: text-bottom;
 }
 
+.dot {
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
 /*
  * Sidebar
  */

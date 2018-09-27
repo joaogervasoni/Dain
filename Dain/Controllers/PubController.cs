@@ -55,8 +55,10 @@ namespace Dain.Controllers
             newPub.Lng = tuple.Item2;
             newPub.Photo = ImageHandler.HttpPostedFileBaseToByteArray(upImage);
             newPub.PhotoType = upImage.ContentType;
+            newPub.LayoutStyle = "dark";
             newUser.RegistrationDate = DateTime.Now;
             newUser.UserType = nameof(Pub);
+
 
             // Insert in the database, if successful
             var returnedUser = UserDAO.Insert(newUser);
@@ -165,6 +167,14 @@ namespace Dain.Controllers
             return RedirectToAction("Account");
         }
 
+        public ActionResult UpdateLayout(string layout)
+        {
+            var update = PubDAO.SearchByUserId(UserSession.ReturnUserId(null));
+            update.LayoutStyle = layout;
+            Update(update);
+            return RedirectToAction("Account");
+        }
+
         [HttpPost]
         public ActionResult UpdateProfile(HttpPostedFileBase upImage)
         {
@@ -197,6 +207,7 @@ namespace Dain.Controllers
             ViewBag.PubsList = JsonConvert.SerializeObject(pubsList);
             ViewBag.Name = pub.Name;
             ViewBag.Profile = ImageHandler.PhotoBase64(pub.Photo, pub.PhotoType);
+            ViewBag.LayoutStyle = pub.LayoutStyle;
         }
 
         #endregion

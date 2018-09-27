@@ -83,6 +83,11 @@ namespace Dain.Models
         [Display(Name = "Gender")]
         public string Gender { get; set; }
 
+        /// <summary>
+        /// Layout color and style
+        /// </summary>
+        public string LayoutStyle { get; set; }
+
         #endregion
     }
 }

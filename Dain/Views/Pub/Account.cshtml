@@ -9,6 +9,7 @@
     Layout = "~/Views/Shared/_Layout-Dashboard-Pub.cshtml";
     ViewBag.User = UserDAO.Search(UserSession.ReturnUserId(null));
     ViewBag.Profile = ViewBag.Profile;
+    ViewBag.LayoutStyle = @ViewBag.LayoutStyle;
 }
 
 <div class="line">
@@ -63,9 +64,34 @@
             </div>
             <br />
         </div>
+
+
     }
 
     @{Html.RenderPartial("UserUpdate", (User)ViewBag.User); }
+
+
+    <p class="ul" onclick="Show(5)">Change Style Color</p>
+    <div class="form-signin" id="colorForm" style="display:none;">
+        <div class="card text-center col-md-4">
+            <div class="card-body">
+                Click to change
+                <br />
+                <a href="@Url.Action("UpdateLayout", "Pub", new { layout= "light" })">
+                    <span class="dot" style="background-color: lightgray"></span>
+                </a>
+                <a href="@Url.Action("UpdateLayout", "Pub", new { layout= "primary" })">
+                    <span class="dot" style="background-color: dodgerblue"></span>
+                </a>
+                <a href="@Url.Action("UpdateLayout", "Pub", new { layout= "dark" })">
+                    <span class="dot" style="background-color: dimgray"></span>
+                </a>
+            </div>
+        </div>
+        <br />
+    </div>
+
+
 </div>
 
 <br />

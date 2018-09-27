@@ -133,9 +133,17 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="DAL\CategoryDAO.cs" />
     <Compile Include="DAL\UserDAO.cs" />
-    <Compile Include="Migrations\201809271321240_FirstMigration.cs" />
-    <Compile Include="Migrations\201809271321240_FirstMigration.Designer.cs">
-      <DependentUpon>201809271321240_FirstMigration.cs</DependentUpon>
+    <Compile Include="Migrations\201809271614071_g.cs" />
+    <Compile Include="Migrations\201809271614071_g.Designer.cs">
+      <DependentUpon>201809271614071_g.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809271637345_ge.cs" />
+    <Compile Include="Migrations\201809271637345_ge.Designer.cs">
+      <DependentUpon>201809271637345_ge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809271719275_geg.cs" />
+    <Compile Include="Migrations\201809271719275_geg.Designer.cs">
+      <DependentUpon>201809271719275_geg.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
@@ -201,8 +209,14 @@
     <Folder Include="Views\Product\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201809271321240_FirstMigration.resx">
-      <DependentUpon>201809271321240_FirstMigration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201809271614071_g.resx">
+      <DependentUpon>201809271614071_g.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809271637345_ge.resx">
+      <DependentUpon>201809271637345_ge.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809271719275_geg.resx">
+      <DependentUpon>201809271719275_geg.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

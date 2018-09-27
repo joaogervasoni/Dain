@@ -82,6 +82,11 @@ namespace Dain.Models
         /// </summary>
         public string PhotoType { get; set; }
 
+        /// <summary>
+        /// Layout color and style
+        /// </summary>
+        public string LayoutStyle { get; set; }
+
         #endregion
     }
 }
