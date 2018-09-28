@@ -200,7 +200,18 @@ namespace Dain.Controllers
 
         public void ViewBags(Pub returnedPub)
         {
-            var pubsList = PubDAO.ReturnList().Select(x => new { x.Id, x.Name, x.Rating, x.Lat, x.Lng, x.Address, x.FoundationDate }).ToList();
+            var pubsList = PubDAO.ReturnList().Select(pub => new GoogleMapPubData()
+            {
+                Id = pub.Id,
+                Name = pub.Name,
+                Photo = ImageHandler.PhotoBase64(pub.Photo, pub.PhotoType),
+                Rating = pub.Rating,
+                Lat = pub.Lat,
+                Lng = pub.Lng,
+                Address = pub.Address,
+                FoundationDate = pub.FoundationDate
+            }).ToList();
+
             ViewBag.PubsList = JsonConvert.SerializeObject(pubsList);
             ViewBag.Lng = returnedPub.Lng == 0 ? -49.276855 : returnedPub.Lng;
             ViewBag.Lat = returnedPub.Lat == 0 ? -25.441105 : returnedPub.Lat;
