@@ -44,6 +44,15 @@ namespace Dain.Utils
         #endregion
 
         #region Clear Session Methods
+        
+        public static void ClearAllSessions()
+        {
+            HttpContext.Current.Session["UserID"] = null;
+            HttpContext.Current.Session["PubID"] = null;
+            HttpContext.Current.Session["PersonID"] = null;
+            HttpContext.Current.Session["user"] = null;
+            HttpContext.Current.Session["product"] = null;
+        }
 
         public static void ClearUserSession()
         {

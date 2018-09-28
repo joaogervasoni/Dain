@@ -4,21 +4,28 @@
     ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_Layout-Dashboard.cshtml";
     ViewBag.PubsList = ViewBag.PubsList;
+    ViewBag.Lat = ViewBag.Lat;
+    ViewBag.Lng = ViewBag.Lng;
 }
 
-<div id="map" style="width:100%;height:800px;"></div>
+<div id="map" style="width:100%;height:600px;"></div>
 
 <script>
     var json = '@Html.Raw(ViewBag.PubsList)';
     var style = '[{"elementType":"geometry","stylers":[{"color":"#212121"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"elementType":"labels.text.stroke","stylers":[{"color":"#212121"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"color":"#757575"}]},{"featureType":"administrative.country","elementType":"labels.text.fill","stylers":[{"color":"#9e9e9e"}]},{"featureType":"administrative.land_parcel","stylers":[{"visibility":"off"}]},{"featureType":"administrative.locality","elementType":"labels.text.fill","stylers":[{"color":"#bdbdbd"}]},{"featureType":"poi","elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#181818"}]},{"featureType":"poi.park","elementType":"labels.text.fill","stylers":[{"color":"#616161"}]},{"featureType":"poi.park","elementType":"labels.text.stroke","stylers":[{"color":"#1b1b1b"}]},{"featureType":"road","elementType":"geometry.fill","stylers":[{"color":"#2c2c2c"}]},{"featureType":"road","elementType":"labels.text.fill","stylers":[{"color":"#8a8a8a"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#373737"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#3c3c3c"}]},{"featureType":"road.highway.controlled_access","elementType":"geometry","stylers":[{"color":"#4e4e4e"}]},{"featureType":"road.local","elementType":"labels.text.fill","stylers":[{"color":"#616161"}]},{"featureType":"transit","elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"color":"#3d3d3d"}]}]';
-    var map, infowindow;
+    var map, infoWindow;
+
+    var initialPosition = {
+        lat: parseFloat('@ViewBag.Lat'.replace(",", ".")),
+        lng: parseFloat('@ViewBag.Lng'.replace(",", "."))
+    };
 
     function initialize() {
         var mapOptions = {
-            center: new google.maps.LatLng(-25.441105, -49.276855),
-            zoom: 13,
-            styles: JSON.parse(style)
-
+            center: new google.maps.LatLng(initialPosition),
+            zoom: 16,
+            styles: JSON.parse(style),
+            gestureHandling: 'greedy'
         };
         map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
@@ -37,25 +44,28 @@
                 position: (myLatlng),
                 data: this,
                 map: map,
+                icon: '@Url.Content("~/Content/Map-Icon-Pub.png")',
                 title: 'Dain Map'
             });
 
             google.maps.event.addListener(marker, 'click', function () {
 
-                if (infowindow) {
-                    infowindow.close();
+                if (infoWindow) {
+                    infoWindow.close();
                 }
 
                 map.setZoom(15);
                 map.setCenter(marker.getPosition());
 
-                var contentString = '<p><b>Name: </b>' + this.data.Name + ' (Id: ' + this.data.Id + ')</p><p><b>Rating: </b>' + this.data.Rating + '</p><b>Address: </b>' + this.data.Address + '</p>';
+                var contentString = "<div style='float:left'><img style='height:136px; width: 100%;' src=" + this.data.Photo + "></div><div style='float:right; padding: 10px;'>" +
+                    '<p><b>Name: </b>' + this.data.Name + ' (Id: ' + this.data.Id + ')</p><p><b>Rating: </b>'
+                    + this.data.Rating + '</p><b>Address: </b>' + this.data.Address + '</p>';
 
-                infowindow = new google.maps.InfoWindow(
+                infoWindow = new google.maps.InfoWindow(
                     {
                         content: contentString
                     });
-                infowindow.open(map, this);
+                infoWindow.open(map, this);
             });
         });
     }

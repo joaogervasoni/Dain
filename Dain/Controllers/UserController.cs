@@ -92,6 +92,11 @@ namespace Dain.Controllers
             return RedirectToAction("Account", user.UserType);
         }
 
+        public ActionResult Logout()
+        {
+            UserSession.ClearAllSessions();
+            return View("Login");
+        }
         #endregion
     }
 }

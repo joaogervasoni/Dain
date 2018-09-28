@@ -77,14 +77,14 @@ namespace Dain.Controllers
             UserSession.ReturnUserId(returnedPub.UserId);
 
             System.Web.HttpContext.Current.Session["user"] = null;
-            return RedirectToAction("Account", "Pub");
+            return RedirectToAction("Dashboard", "Pub");
         }
         
 
         public ActionResult Product()
         {
-            ViewBags();
             var pubSession = PubDAO.Search(UserSession.ReturnPubId(null));
+            ViewBags(pubSession);
             ViewBag.ProductList = ProductDAO.ReturnList(pubSession.Id);
             ViewBag.Categories = new MultiSelectList(CategoryDAO.ReturnList(),"Id", "Name");
             try
@@ -96,7 +96,7 @@ namespace Dain.Controllers
                     return View(product);
                 }
             }
-            catch { }
+            catch (Exception ex) { ModelState.AddModelError("", $"Error - {ex.Message}"); }
 
             ViewBag.Alter = "No";
             return View();
@@ -105,18 +105,18 @@ namespace Dain.Controllers
         public ActionResult Dashboard()
         {
             var pubSession = PubDAO.Search(UserSession.ReturnPubId(null));
-            if (pubSession == null) RedirectToAction("Login", "User");
+            if (pubSession == null) RedirectToAction("Logout", "User");
 
-            ViewBags();
+            ViewBags(pubSession);
             return View(pubSession);
         }
 
         public ActionResult Account()
         {
             var returnedPub = PubDAO.Search(UserSession.ReturnPubId(null));
-            if (returnedPub == null) RedirectToAction("Login", "User");
+            if (returnedPub == null) RedirectToAction("Logout", "User");
 
-            ViewBags();
+            ViewBags(returnedPub);
             return View(returnedPub);
         }
 
@@ -133,10 +133,8 @@ namespace Dain.Controllers
 
             PubDAO.Delete(returnedPub);
             UserDAO.Delete(returnedUser);
-            UserSession.ClearPubSession();
-            UserSession.ClearUserSession();
 
-            return RedirectToAction("Login", "User");
+            return RedirectToAction("Logout", "User");
         }
 
         public ActionResult Update(Pub pubUpdate)
@@ -200,15 +198,15 @@ namespace Dain.Controllers
 
         #region Helpers
 
-        public void ViewBags()
+        public void ViewBags(Pub returnedPub)
         {
-            var pub = PubDAO.Search(UserSession.ReturnPubId(null));
-
             var pubsList = PubDAO.ReturnList().Select(x => new { x.Id, x.Name, x.Rating, x.Lat, x.Lng, x.Address, x.FoundationDate }).ToList();
             ViewBag.PubsList = JsonConvert.SerializeObject(pubsList);
-            ViewBag.Name = pub.Name;
-            ViewBag.Profile = ImageHandler.PhotoBase64(pub.Photo, pub.PhotoType);
-            ViewBag.LayoutStyle = pub.LayoutStyle;
+            ViewBag.Lng = returnedPub.Lng == 0 ? -49.276855 : returnedPub.Lng;
+            ViewBag.Lat = returnedPub.Lat == 0 ? -25.441105 : returnedPub.Lat;
+            ViewBag.Name = returnedPub.Name;
+            ViewBag.Profile = ImageHandler.PhotoBase64(returnedPub.Photo, returnedPub.PhotoType);
+            ViewBag.LayoutStyle = returnedPub.LayoutStyle;
             ViewBag.Type = "pub";
         }
 

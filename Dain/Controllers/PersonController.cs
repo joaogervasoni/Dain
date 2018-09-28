@@ -70,19 +70,18 @@ namespace Dain.Controllers
         public ActionResult Dashboard()
         {
             var personSession = PersonDAO.Search(UserSession.ReturnPersonId(null));
+            if (personSession == null) return RedirectToAction("Logout", "User");
 
-            if (personSession == null) RedirectToAction("Login", "User");
-
-            ViewBags();
+            ViewBags(personSession);
             return View(personSession);
         }
 
         public ActionResult Account()
         {
             var returnedPerson = PersonDAO.Search(UserSession.ReturnPersonId(null));
-            if (returnedPerson == null) RedirectToAction("Login", "User");
+            if (returnedPerson == null) return RedirectToAction("Logout", "User");
 
-            ViewBags();
+            ViewBags(returnedPerson);
             return View(returnedPerson);
         }
 
@@ -96,9 +95,8 @@ namespace Dain.Controllers
 
             PersonDAO.Delete(returnedPerson);
             UserDAO.Delete(returnedUser);
-
-            UserSession.ClearPubSession();
-            return RedirectToAction("Login", "User");
+            
+            return RedirectToAction("Logout", "User");
         }
 
         public ActionResult Update(Person personUpdate)
@@ -136,7 +134,7 @@ namespace Dain.Controllers
             if (upImage == null) return View("Account");
 
             var returnedPerson = PersonDAO.Search(UserSession.ReturnPersonId(null));
-            if (returnedPerson == null) return RedirectToAction("Login", "User");
+            if (returnedPerson == null) return RedirectToAction("Logout", "User");
 
             returnedPerson.Photo = ImageHandler.HttpPostedFileBaseToByteArray(upImage);
             returnedPerson.PhotoType = upImage.ContentType;
@@ -147,37 +145,59 @@ namespace Dain.Controllers
 
         public ActionResult Pubs()
         {
-            ViewBags();
+            var returnedPerson = PersonDAO.Search(UserSession.ReturnPersonId(null));
+            ViewBags(returnedPerson);
             return View(PubDAO.ReturnList());
         }
 
         public ActionResult Pub(int id)
         {
             var pub = PubDAO.Search(id);
+            var returnedPerson = PersonDAO.Search(UserSession.ReturnPersonId(null));
             ViewBag.ProductList = ProductDAO.ReturnList(pub.Id);
             ViewBag.Categories = new MultiSelectList(CategoryDAO.ReturnList(), "Id", "Name");
 
-            ViewBags();
+            ViewBags(returnedPerson);
             return View(pub);
         }
 
         #region Helpers
 
-        public void ViewBags()
+        public void ViewBags(Person personSession)
         {
-            var personSession = PersonDAO.Search(UserSession.ReturnPersonId(null));
-            var tuple = GoogleGeoLocation.GetCoordinates(personSession.Address, personSession.City, personSession.State);
-            var pubsList = PubDAO.ReturnList().Select(x => new { x.Id, x.Name, x.Rating, x.Lat, x.Lng, x.Address, x.FoundationDate }).ToList();
-            
+            var pubsList = PubDAO.ReturnList().Select(pub => new GoogleMapPubData()
+            {
+                Id = pub.Id,
+                Name = pub.Name,
+                Photo = ImageHandler.PhotoBase64(pub.Photo, pub.PhotoType),
+                Rating = pub.Rating,
+                Lat = pub.Lat,
+                Lng = pub.Lng,
+                Address = pub.Address,
+                FoundationDate = pub.FoundationDate
+            }).ToList();
+
             ViewBag.Name = personSession.Name;
             ViewBag.Profile = ImageHandler.PhotoBase64(personSession.Photo, personSession.PhotoType);
-            ViewBag.Lon = tuple == null ? -49.276855 : tuple.Item2;
-            ViewBag.Lat = tuple == null ? -25.441105 : tuple.Item1;
+            ViewBag.Lng = personSession.Lng == 0 ? -49.276855 : personSession.Lng;
+            ViewBag.Lat = personSession.Lat == 0 ? -25.441105 : personSession.Lat;
             ViewBag.PubsList = JsonConvert.SerializeObject(pubsList);
             ViewBag.LayoutStyle = personSession.LayoutStyle;
             ViewBag.Type = "person";
         }
 
         #endregion
+    }
+
+    public class GoogleMapPubData
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Photo { get; set; }
+        public double Rating { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
+        public string Address { get; set; }
+        public DateTime FoundationDate { get; set; }
     }
 }

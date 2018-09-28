@@ -21,31 +21,31 @@ namespace Dain.Models
         /// </summary>
         public int UserId { get; set; }
 
+        [Required]
+        [Display(Name = "Name")]
         /// <summary>
         /// The name of the person
         /// </summary>
-        [Required]
-        [Display(Name = "Name")]
         public string Name { get; set; }
 
+        [Required]
+        [Display(Name = "Address")]
         /// <summary>
         /// The address where the person lives
         /// </summary>
-        [Required]
-        [Display(Name = "Address")]
         public string Address { get; set; }
 
+        [Required]
+        [Display(Name = "City")]
         /// <summary>
         /// The city where the person lives
         /// </summary>
-        [Required]
-        [Display(Name = "City")]
         public string City { get; set; }
 
+        [Display(Name = "State")]
         /// <summary>
         /// The state where the person lives
         /// </summary>
-        [Display(Name = "State")]
         public string State { get; set; }
 
         /// <summary>
@@ -58,13 +58,13 @@ namespace Dain.Models
         /// </summary>
         public double Lng { get; set; }
 
-        /// <summary>
-        /// The date that the person was born
-        /// </summary>
         [Required]
         [Display(Name = "Birthday Date")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        /// <summary>
+        /// The date that the person was born
+        /// </summary>
         public DateTime Birthday { get; set; }
 
         /// <summary>
