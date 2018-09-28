@@ -156,10 +156,48 @@ namespace Dain.Controllers
             var returnedPerson = PersonDAO.Search(UserSession.ReturnPersonId(null));
             ViewBag.ProductList = ProductDAO.ReturnList(pub.Id);
             ViewBag.Categories = new MultiSelectList(CategoryDAO.ReturnList(), "Id", "Name");
+            if (RatingDAO.SearchByPersonAndPubId(UserSession.ReturnPersonId(null), id) != null)
+            {
+                ViewBag.Rate = "Unrate";
+            }
+            else
+            {
+                ViewBag.Rate = "Rate";
+            }
 
             ViewBags(returnedPerson);
             return View(pub);
         }
+
+        public ActionResult Rate(int id)
+        {
+            var pub = PubDAO.Search(id);
+            var rating = RatingDAO.SearchByPersonAndPubId(UserSession.ReturnPersonId(null), pub.Id);
+
+            if (rating == null)
+            {
+                rating = new Rating
+                {
+                    PersonId = UserSession.ReturnPersonId(null),
+                    PubId = pub.Id
+                };
+                if (RatingDAO.Insert(rating) != null)
+                {
+                    pub.Rating = pub.Rating + 1;
+                    PubDAO.Update(pub);
+                }
+            }
+            else
+            {
+                if (RatingDAO.Delete(rating) == true)
+                {
+                    pub.Rating = pub.Rating - 1;
+                    PubDAO.Update(pub);
+                }
+            }
+            return RedirectToAction("Pub", new { id });
+        }
+
 
         #region Helpers
 
