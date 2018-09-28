@@ -140,13 +140,11 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\DainAPIController.cs" />
     <Compile Include="DAL\CategoryDAO.cs" />
+    <Compile Include="DAL\RatingDAO.cs" />
     <Compile Include="DAL\UserDAO.cs" />
-    <Compile Include="Migrations\201809280022153_Testing.cs" />
-    <Compile Include="Migrations\201809280022153_Testing.Designer.cs">
-      <DependentUpon>201809280022153_Testing.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Rating.cs" />
     <Compile Include="Utils\GoogleGeoLocation.cs" />
     <Compile Include="Controllers\PersonController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
@@ -206,11 +204,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Product\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201809280022153_Testing.resx">
-      <DependentUpon>201809280022153_Testing.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

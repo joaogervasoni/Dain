@@ -30,12 +30,17 @@ namespace Dain.DAL
             catch { return false; }
         }
 
-        public static void Delete(T entity)
+        public static bool Delete(T entity)
         {
-            db.Entry<T>(entity).State = EntityState.Deleted;
-            db.Set<T>().Remove(entity);
+            try
+            {
+                db.Entry<T>(entity).State = EntityState.Deleted;
+                db.Set<T>().Remove(entity);
 
-            db.SaveChanges();
+                db.SaveChanges();
+                return true;
+            }
+            catch { return false; }
         }
 
         public static T Search(int id)

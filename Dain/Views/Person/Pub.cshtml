@@ -3,6 +3,7 @@
 
 @{
     List<Product> Products = ViewBag.ProductList;
+    string Rate = ViewBag.Rate;
     ViewBag.Title = "Dashboard - Pub";
     Layout = "~/Views/Shared/_Layout-Dashboard.cshtml";
     ViewBag.PubsList = ViewBag.PubsList;
@@ -16,6 +17,7 @@
         <h4 class="jumbotron-heading custom-font">Rating: <b>@Model.Rating</b></h4>
         <h4 class="jumbotron-heading custom-font">Address: <b>@Model.Address</b></h4>
         <h4 class="jumbotron-heading custom-font">Foundation Year: <b>@Model.FoundationDate.Year</b></h4>
+        @Html.ActionLink(Rate, "Rate", "Person", new { id = Model.Id }, new { @class = "btn btn-sm btn-outline-secondary" })
     </div>
 </section>
 
