@@ -41,7 +41,6 @@ namespace Dain.Controllers
                 return View(newPub);
             }
 
-
             // Get the user from the session that the User Controller generated with the basic data from the user
             var newUser = (User)System.Web.HttpContext.Current.Session["user"];
 
@@ -84,6 +83,7 @@ namespace Dain.Controllers
         public ActionResult Product()
         {
             var pubSession = PubDAO.Search(UserSession.ReturnPubId(null));
+            if (pubSession == null) return RedirectToAction("Logout", "User");
             ViewBags(pubSession);
             ViewBag.ProductList = ProductDAO.ReturnList(pubSession.Id);
             ViewBag.Categories = new MultiSelectList(CategoryDAO.ReturnList(),"Id", "Name");
@@ -105,7 +105,7 @@ namespace Dain.Controllers
         public ActionResult Dashboard()
         {
             var pubSession = PubDAO.Search(UserSession.ReturnPubId(null));
-            if (pubSession == null) RedirectToAction("Logout", "User");
+            if (pubSession == null) return RedirectToAction("Logout", "User");
 
             ViewBags(pubSession);
             return View(pubSession);
@@ -114,7 +114,7 @@ namespace Dain.Controllers
         public ActionResult Account()
         {
             var returnedPub = PubDAO.Search(UserSession.ReturnPubId(null));
-            if (returnedPub == null) RedirectToAction("Logout", "User");
+            if (returnedPub == null) return RedirectToAction("Logout", "User");
 
             ViewBags(returnedPub);
             return View(returnedPub);
@@ -123,6 +123,7 @@ namespace Dain.Controllers
         public ActionResult Delete(string password)
         {
             var returnedPub = PubDAO.Search(UserSession.ReturnPubId(null));
+            if (returnedPub == null) return RedirectToAction("Logout", "User");
             var returnedUser = UserDAO.Search(returnedPub.UserId);
 
             if (password != returnedUser.Password)
@@ -140,16 +141,14 @@ namespace Dain.Controllers
         public ActionResult Update(Pub pubUpdate)
         {
             var returnedPub = PubDAO.Search(UserSession.ReturnPubId(null));
-            
+            if (returnedPub == null) return RedirectToAction("Logout", "User");
 
             // Set the remaining properties of the model
-            
             returnedPub.Name = pubUpdate.Name ?? returnedPub.Name;
             returnedPub.FoundationDate = pubUpdate.FoundationDate == null ? returnedPub.FoundationDate : pubUpdate.FoundationDate;
             returnedPub.Address = pubUpdate.Address ?? returnedPub.Address;
             returnedPub.City = pubUpdate.City ?? returnedPub.City;
             returnedPub.State = pubUpdate.State ?? returnedPub.State;
-
 
             // Get the coordinates of the bar location that the user has given
             Tuple<double, double> tuple =
@@ -169,6 +168,7 @@ namespace Dain.Controllers
         public ActionResult UpdateLayout(string layout)
         {
             var update = PubDAO.SearchByUserId(UserSession.ReturnUserId(null));
+            if (update == null) return RedirectToAction("Logout", "User"); 
             update.LayoutStyle = layout;
             Update(update);
             return RedirectToAction("Account");

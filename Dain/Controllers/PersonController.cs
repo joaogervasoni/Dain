@@ -31,7 +31,11 @@ namespace Dain.Controllers
         public ActionResult Register(Person newPerson, HttpPostedFileBase upImage)
         {
             // Verify the if the model is valid
-            if (ModelState.IsValid == false) return View(newPerson);
+            if (ModelState.IsValid == false)
+            {
+                ModelState.AddModelError("", "Error - Check information and try again");
+                return View(newPerson);
+            }
 
             // Get the user from the session that the User Controller generated with the basic data from the user
             var newUser = (User)System.Web.HttpContext.Current.Session["user"];
@@ -57,7 +61,11 @@ namespace Dain.Controllers
 
             newPerson.UserId = returnedUser.Id;
             var returnedPerson = PersonDAO.Insert(newPerson);
-            if (returnedPerson == null || returnedUser == null) return View(newPerson);
+            if (returnedPerson == null || returnedUser == null)
+            {
+                ModelState.AddModelError("", "Error - Check information and try again");
+                return View(newPerson);
+            }
 
             // Generate a session with the user database id
             UserSession.ReturnPersonId(returnedPerson.Id);
@@ -89,9 +97,14 @@ namespace Dain.Controllers
         public ActionResult Delete(string password)
         {
             var returnedPerson = PersonDAO.Search(UserSession.ReturnPersonId(null));
+            if (returnedPerson == null) return RedirectToAction("Logout", "User");
             var returnedUser = UserDAO.Search(returnedPerson.UserId);
 
-            if (password != returnedUser.Password) return View("Account");
+            if (password != returnedUser.Password)
+            {
+                ModelState.AddModelError("", "Error - Password does not match");
+                return View("Account");
+            }
 
             PersonDAO.Delete(returnedPerson);
             UserDAO.Delete(returnedUser);
@@ -102,6 +115,7 @@ namespace Dain.Controllers
         public ActionResult Update(Person personUpdate)
         {
             var returnedPerson = PersonDAO.Search(UserSession.ReturnPersonId(null));
+            if (returnedPerson == null) return RedirectToAction("Logout", "User");
 
             // Get the coordinates of the bar location that the user has given
             Tuple<double, double> tuple =
@@ -116,7 +130,11 @@ namespace Dain.Controllers
             returnedPerson.City = personUpdate.City;
             returnedPerson.State = personUpdate.State;
 
-            if (PersonDAO.Update(returnedPerson) != true) return View("Account");
+            if (PersonDAO.Update(returnedPerson) != true)
+            {
+                ModelState.AddModelError("", "Error - Check information and try again");
+                return View("Account");
+            }
             return View("Account");
         }
 
@@ -131,7 +149,11 @@ namespace Dain.Controllers
         [HttpPost]
         public ActionResult UpdatePhoto(HttpPostedFileBase upImage)
         {
-            if (upImage == null) return View("Account");
+            if (upImage == null)
+            {
+                ModelState.AddModelError("", "Error - Image dont work");
+                return View("Account");
+            }
 
             var returnedPerson = PersonDAO.Search(UserSession.ReturnPersonId(null));
             if (returnedPerson == null) return RedirectToAction("Logout", "User");
@@ -139,21 +161,29 @@ namespace Dain.Controllers
             returnedPerson.Photo = ImageHandler.HttpPostedFileBaseToByteArray(upImage);
             returnedPerson.PhotoType = upImage.ContentType;
 
-            if (PersonDAO.Update(returnedPerson) != true) return View("Account");
+            if (PersonDAO.Update(returnedPerson) != true)
+            {
+                ModelState.AddModelError("", "Error - Database update image error!");
+                return View("Account");
+            }
             return RedirectToAction("Account");
         }
 
         public ActionResult Pubs()
         {
             var returnedPerson = PersonDAO.Search(UserSession.ReturnPersonId(null));
+            if (returnedPerson == null) return RedirectToAction("Logout", "User");
+
             ViewBags(returnedPerson);
-            return View(PubDAO.ReturnList());
+            return View(PubDAO.ReturnList().OrderByDescending(l => l.Rating).ToList());
         }
 
         public ActionResult Pub(int id)
         {
             var pub = PubDAO.Search(id);
             var returnedPerson = PersonDAO.Search(UserSession.ReturnPersonId(null));
+            if (returnedPerson == null) return RedirectToAction("Logout", "User");
+
             ViewBag.ProductList = ProductDAO.ReturnList(pub.Id);
             ViewBag.Categories = new MultiSelectList(CategoryDAO.ReturnList(), "Id", "Name");
             if (RatingDAO.SearchByPersonAndPubId(UserSession.ReturnPersonId(null), id) != null)

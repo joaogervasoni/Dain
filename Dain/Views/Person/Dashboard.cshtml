@@ -7,7 +7,7 @@
     ViewBag.Profile = ViewBag.Profile;
 }
 
-<div id="map" style="width:100%;height:600px;"></div>
+<div id="map" style="width:100%;height:800px;"></div>
 
 <script>
     var json = '@Html.Raw(ViewBag.PubsList)';
@@ -30,7 +30,7 @@
         // Map
         var mapOptions = {
             center: userPosition,
-            zoom: 16,
+            zoom: 14,
             styles: JSON.parse(style),
             gestureHandling: 'greedy'
         };
@@ -55,7 +55,7 @@
                 // Set a new user marker in the gps given position of the user
                 userMarker = new google.maps.Marker({
                     position: initialPosition,
-                    icon: '@Url.Content("~/Content/Map-Icon-Person.ico")',
+                    icon: '@Url.Content("~/Content/Dain-User.ico")',
                     map: map
                 });
                 
@@ -70,7 +70,7 @@
 
             userMarker = new google.maps.Marker({
                 position: initialPosition,
-                icon: '@Url.Content("~/Content/Map-Icon-Person.ico")',
+                icon: '@Url.Content("~/Content/Dain-User.ico")',
                 map: map
             });
         } else {
@@ -80,7 +80,7 @@
             // Add the marker in the position where the user lives
             userMarker = new google.maps.Marker({
                 position: initialPosition,
-                icon: '@Url.Content("~/Content/Map-Icon-Person.ico")',
+                icon: '@Url.Content("~/Content/Dain-User.ico")',
                 map: map
             });
         }
@@ -111,7 +111,7 @@
                 position: (myLatlng),
                 data: this,
                 map: map,
-                icon: '@Url.Content("~/Content/Map-Icon-Pub.png")',
+                icon: '@Url.Content("~/Content/Dain-Logo.ico")',
                 title: 'Dain Map'
             });
 
@@ -123,10 +123,10 @@
                     infoWindow.close();
                 }
 
-                map.setZoom(18);
+                map.setZoom(14);
                 map.setCenter(marker.getPosition());
                 
-                var contentString = "<div style='float:left'><img style='height:136px; width: 100%;' src=" + this.data.Photo + "></div><div style='float:right; padding: 10px;'>" +
+                var contentString = "<img style='max-width: 200px;' src=" + this.data.Photo + ">" +
                     '<p><b>Name: </b>' + this.data.Name + ' (Id: ' + this.data.Id + ')</p><p><b>Rating: </b>' + this.data.Rating +
                     '</p><b>Address: </b>' + this.data.Address + '</p>' + "<button class='btn' id='goPub" + this.data.Id + "' type='button'>HappyHour Time Baby!!!</button> ";
 

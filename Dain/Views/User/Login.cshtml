@@ -13,6 +13,7 @@
 
         <img class="mb-4" src="~/Content/Dain-Logo.png" alt="" width="150" height="185">
         <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+        @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
 
         @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = Html.DisplayNameFor(u => u.Email), id = "EmailLogin",
             required = "true", type = "email" })

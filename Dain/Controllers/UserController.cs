@@ -22,7 +22,12 @@ namespace Dain.Controllers
         public ActionResult Login(User user)
         {
             var returnedUser = UserDAO.SearchByEmailPassword(user.Email, user.Password);
-            if (returnedUser == null) return View(user);
+            if (returnedUser == null)
+            {
+                ModelState.AddModelError("", "Error - Email or Password incorrect");
+                return View(user);
+            }
+
 
             if (returnedUser.UserType.Equals(nameof(Pub)))
             {
@@ -43,6 +48,7 @@ namespace Dain.Controllers
                 return RedirectToAction("Dashboard", "Person");
             }
 
+            ModelState.AddModelError("", "Error - I dont know");
             return View("Login", user);
         }
 
